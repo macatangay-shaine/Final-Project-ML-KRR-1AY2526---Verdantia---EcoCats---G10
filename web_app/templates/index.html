@@ -108,12 +108,121 @@
 
             toggleMode();
             updateSoilImage();
+
+            // Local Profile: initialize from localStorage or server-provided session fallback
+            initLocalProfile({
+                username: "{{ (profile_username or '')|e }}",
+                avatar: "{{ (profile_avatar or '')|e }}"
+            });
+            // Ensure hidden inputs are synced before form submit
+            const form = document.querySelector('form');
+            if (form) {
+                form.addEventListener('submit', syncHiddenProfileInputs);
+            }
+            const saveBtn = document.getElementById('save-profile-btn');
+            if (saveBtn) saveBtn.addEventListener('click', saveProfileToLocal);
+            const avatarInput = document.getElementById('avatar-input');
+            if (avatarInput) avatarInput.addEventListener('change', handleAvatarFileChange);
         });
+
+        // --- Local Profile (username + avatar) ---
+        const LS_USERNAME_KEY = 'sg_profile_username';
+        const LS_AVATAR_KEY = 'sg_profile_avatar';
+
+        function initLocalProfile(serverFallback) {
+            try {
+                let username = localStorage.getItem(LS_USERNAME_KEY);
+                let avatar = localStorage.getItem(LS_AVATAR_KEY);
+
+                if (!username && serverFallback && serverFallback.username) {
+                    username = serverFallback.username;
+                }
+                if (!avatar && serverFallback && serverFallback.avatar) {
+                    avatar = serverFallback.avatar;
+                }
+
+                // Defaults
+                if (!username) username = 'Gardener';
+
+                // Update UI
+                const unameInput = document.getElementById('username-input');
+                const unameDisplay = document.getElementById('username-display');
+                const avatarImg = document.getElementById('profile-avatar');
+                if (unameInput) unameInput.value = username;
+                if (unameDisplay) unameDisplay.textContent = username;
+                if (avatarImg) {
+                    if (avatar) {
+                        avatarImg.src = avatar;
+                    } else {
+                        avatarImg.src = 'https://via.placeholder.com/96?text=🌱';
+                    }
+                }
+
+                // Sync hidden inputs for session fallback
+                syncHiddenProfileInputs();
+            } catch (e) {
+                // If localStorage is unavailable, still attempt to use serverFallback
+                const unameInput = document.getElementById('username-input');
+                const unameDisplay = document.getElementById('username-display');
+                const avatarImg = document.getElementById('profile-avatar');
+                const username = (serverFallback && serverFallback.username) || 'Gardener';
+                const avatar = (serverFallback && serverFallback.avatar) || '';
+                if (unameInput) unameInput.value = username;
+                if (unameDisplay) unameDisplay.textContent = username;
+                if (avatarImg) avatarImg.src = avatar || 'https://via.placeholder.com/96?text=🌱';
+                syncHiddenProfileInputs();
+            }
+        }
+
+        function handleAvatarFileChange(event) {
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const dataUrl = e.target.result;
+                const avatarImg = document.getElementById('profile-avatar');
+                if (avatarImg) avatarImg.src = dataUrl;
+                try { localStorage.setItem(LS_AVATAR_KEY, dataUrl); } catch (_) {}
+                syncHiddenProfileInputs();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function saveProfileToLocal() {
+            const unameInput = document.getElementById('username-input');
+            if (!unameInput) return;
+            const username = (unameInput.value || 'Gardener').trim();
+            const unameDisplay = document.getElementById('username-display');
+            if (unameDisplay) unameDisplay.textContent = username;
+            try { localStorage.setItem(LS_USERNAME_KEY, username); } catch (_) {}
+            syncHiddenProfileInputs();
+        }
+
+        function syncHiddenProfileInputs() {
+            const hiddenU = document.getElementById('profile_username_hidden');
+            const hiddenA = document.getElementById('profile_avatar_hidden');
+            const unameInput = document.getElementById('username-input');
+            const avatarImg = document.getElementById('profile-avatar');
+            if (hiddenU && unameInput) hiddenU.value = (unameInput.value || 'Gardener').trim();
+            if (hiddenA && avatarImg) hiddenA.value = avatarImg.src || '';
+        }
     </script>
 </head>
 <body data-has-result="{{ (result is not none) }}" data-has-error="{{ (error is not none) }}">
 
 <div class="app">
+    <!-- Profile Bar: Local-only personalization (no auth) -->
+    <div class="profile-bar">
+        <div class="avatar-wrap">
+            <img id="profile-avatar" alt="Avatar" />
+        </div>
+        <div class="profile-controls">
+            <input type="text" id="username-input" class="profile-input" placeholder="Set your username" />
+            <input type="file" id="avatar-input" class="profile-input" accept="image/*" />
+            <button type="button" id="save-profile-btn" class="profile-save">Save Profile</button>
+        </div>
+        <div class="profile-summary">Hello, <span id="username-display">Gardener</span> 🌿</div>
+    </div>
     <!-- SCREEN 1: Landing -->
     <section id="screen-1" class="screen landing">
         <div class="landing-inner">
@@ -146,6 +255,9 @@
         <h1> Verdantia - Smart Gardening Assistant</h1>
 
         <form method="POST">
+    <!-- Hidden inputs to provide session fallback during active sessions -->
+    <input type="hidden" name="profile_username" id="profile_username_hidden" />
+    <input type="hidden" name="profile_avatar" id="profile_avatar_hidden" />
     <div class="mode-selector">
         <label><strong>What would you like to do?</strong></label>
         <select name="mode" id="mode" onchange="toggleMode()">

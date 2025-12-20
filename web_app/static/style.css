@@ -294,3 +294,37 @@ button:hover {
 .mode-title { font-weight: 600; }
 
 .form-screen { margin-top: 12px; }
+
+/* --- Local Profile Bar --- */
+.profile-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #ffffff;
+    padding: 12px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+    margin-bottom: 16px;
+}
+.avatar-wrap img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #4caf50;
+}
+.profile-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.profile-input { width: auto; }
+.profile-save {
+    width: auto;
+    padding: 8px 12px;
+}
+.profile-summary {
+    margin-left: auto;
+    color: #2e7d32;
+    font-weight: 600;
+}
