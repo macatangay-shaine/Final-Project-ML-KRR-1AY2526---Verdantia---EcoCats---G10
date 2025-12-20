@@ -9,8 +9,6 @@ EcoCats — KRR / Machine Learning\
 
 Verdantia is a smart gardening assistant developed as a final project for a Knowledge Representation and Reasoning / Machine Learning course. The system is designed to help users make basic gardening decisions by combining a machine learning model for crop recommendation with a rule-based approach for plant health diagnosis.
 
-The project focuses on applying theoretical concepts from class into a working system rather than building a production-level application. Emphasis was placed on model integration, rule formulation, and end-to-end functionality.
-
 ---
 
 ## Features
