@@ -1,47 +1,94 @@
-# Final-Project-ML-KRR-1AY2526 — Verdantia — EcoCats — G10
+# Final Project — Verdantia
 
-Verdantia is a smart gardening assistant that recommends crops based on soil and environmental inputs, and diagnoses plant health using rule-based checks.
+**Smart Gardening Assistant**
+EcoCats — KRR / Machine Learning\
+
+---
+
+## Overview
+
+Verdantia is a smart gardening assistant developed as a final project for a Knowledge Representation and Reasoning / Machine Learning course. The system is designed to help users make basic gardening decisions by combining a machine learning model for crop recommendation with a rule-based approach for plant health diagnosis.
+
+The project focuses on applying theoretical concepts from class into a working system rather than building a production-level application. Emphasis was placed on model integration, rule formulation, and end-to-end functionality.
+
+---
+
+## Features
+
+* **Crop Recommendation**
+  Predicts a suitable crop based on soil nutrients (N, P, K) and environmental conditions such as temperature, humidity, pH, and rainfall.
+
+* **Plant Health Diagnosis**
+  Uses a rule-based system to provide basic assessments of plant health based on user-input conditions, soil type, and climate information.
+
+* **Web Interface**
+  A simple Flask-based web interface allows users to interact with both features through a single form.
+
+---
 
 ## Project Structure
 
 ```
 smart-gardening/
-├── data/          # Data files and datasets
-├── models/        # Machine learning models (e.g., crop_model.pkl)
-├── utils/         # Rule-based diagnosis helpers
-├── web_app/       # Flask web application (UI)
+├── data/          # Datasets and reference data
+├── models/        # Trained ML models (e.g., crop_model.pkl)
+├── utils/         # Rule-based diagnosis logic
+├── web_app/       # Flask web application
 ├── requirements.txt
 └── README.md
 ```
 
+---
+
+## Technologies Used
+
+* Python 3.10+
+* Flask (web framework)
+* scikit-learn (machine learning)
+* NumPy / Pandas (data handling)
+
+---
+
 ## Prerequisites
 
-- Python 3.10+ on Windows
-- Virtual environment located at `venv/`
+* Windows OS
+* Python 3.10 or later
+* Virtual environment located at `venv/`
 
-## Setup
+---
+
+## Setup Instructions
 
 1. Activate the virtual environment (PowerShell):
+
    ```powershell
    cd C:\Smart_Gardening
    .\venv\Scripts\Activate
    ```
 
-2. Install dependencies:
+2. Install required dependencies:
+
    ```powershell
    pip install -r requirements.txt
    ```
 
-## Run (Local)
+---
 
-Run the Flask app and open the browser:
+## Running the Application
+
+To start the Flask application locally:
 
 ```powershell
 python web_app\app.py
-# then open http://localhost:5000
 ```
 
-Optional (Flask runner):
+Then open a browser and go to:
+
+```
+http://localhost:5000
+```
+
+Optional (using Flask CLI):
 
 ```powershell
 $env:FLASK_APP="web_app/app.py"
@@ -49,18 +96,41 @@ $env:FLASK_ENV="development"
 flask run
 ```
 
+---
+
 ## Usage
 
-- Recommendation mode: Predicts a suitable crop using `models/crop_model.pkl` based on inputs for N/P/K, temperature, humidity, pH, and rainfall.
-- Diagnosis mode: Rule-based assessment using `utils/rules.py` with additional fields like soil type, climate, and current plant.
+1. Open the web application in the browser.
+2. Choose between **Crop Recommendation** or **Plant Health Diagnosis**.
+3. Fill in the required soil and environmental parameters.
+4. Submit the form to receive the system output.
 
-All interactions are via the form on the home page.
+The recommendation feature loads a pre-trained model from `models/crop_model.pkl`, while the diagnosis feature applies predefined rules from `utils/rules.py`.
+
+---
+
+## Limitations
+
+* The accuracy of crop recommendations depends on the quality of the training data and model.
+* The plant health diagnosis is rule-based and does not cover all possible diseases or conditions.
+* The system is intended for educational use and should not be treated as expert agricultural advice.
+
+---
 
 ## Troubleshooting
 
-- "Model not loaded" — ensure `models/crop_model.pkl` exists.
-- Import errors — confirm the virtual environment is activated and `pip install -r requirements.txt` completed.
+* **Model not loaded**: Ensure that `models/crop_model.pkl` exists and is accessible.
+* **Import or module errors**: Verify that the virtual environment is activated and dependencies are installed.
+* **Flask not running**: Check that the correct Python version is being used.
+
+---
+
+## Conclusion
+
+This project demonstrates the integration of machine learning and rule-based reasoning in a practical application. Verdantia serves as a proof-of-concept system that applies classroom concepts to a real-world-inspired problem in smart agriculture.
+
+---
 
 ## License
 
-Project for academic purposes. Add license information here if needed.
+This project was created strictly for academic purposes as part of a college course requirement.
