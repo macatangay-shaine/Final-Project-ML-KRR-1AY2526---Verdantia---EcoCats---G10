@@ -4,26 +4,66 @@
     <title>Smart Gardening Assistant</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script>
-        function toggleMode() {
-            const mode = document.getElementById('mode').value;
-            const plantField = document.getElementById('plant-field');
-            
-            if (mode === 'diagnose') {
-                plantField.style.display = 'block';
-            } else {
-                plantField.style.display = 'none';
-            }
+        // Screen controls
+        function showScreen(id) {
+            const screens = document.querySelectorAll('.screen');
+            screens.forEach(s => s.style.display = 'none');
+            const el = document.getElementById(id);
+            if (el) el.style.display = 'block';
         }
-        
+
+        function startLandingSequence() {
+            const msg1 = document.getElementById('landing-msg-1');
+            const msg2 = document.getElementById('landing-msg-2');
+            const cta = document.getElementById('get-started-btn');
+            if (!msg1 || !msg2 || !cta) return;
+
+            // Step 1: Fade in first message
+            msg1.classList.add('fade-in');
+            setTimeout(() => {
+                // Step 2: Fade out first, then show second
+                msg1.classList.remove('fade-in');
+                msg1.classList.add('fade-out');
+                setTimeout(() => {
+                    msg1.style.display = 'none';
+                    msg2.style.display = 'block';
+                    msg2.classList.add('fade-in');
+                    // Step 3: Show CTA
+                    setTimeout(() => {
+                        cta.style.display = 'inline-block';
+                        cta.classList.add('fade-in');
+                    }, 800);
+                }, 800);
+            }, 1200);
+        }
+
+        // Existing helpers
+        function toggleMode() {
+            const selectEl = document.getElementById('mode');
+            const plantField = document.getElementById('plant-field');
+            if (!selectEl || !plantField) return;
+            const mode = selectEl.value;
+            plantField.style.display = (mode === 'diagnose') ? 'block' : 'none';
+        }
+
+        function selectModeAndContinue(mode) {
+            const selectEl = document.getElementById('mode');
+            selectEl.value = mode;
+            toggleMode();
+            showScreen('screen-3');
+        }
+
         function toggleTooltip(id) {
             const tooltip = document.getElementById(id);
+            if (!tooltip) return;
             tooltip.style.display = tooltip.style.display === 'block' ? 'none' : 'block';
         }
-        
+
         function setDefault(field, value) {
-            document.getElementsByName(field)[0].value = value;
+            const el = document.getElementsByName(field)[0];
+            if (el) el.value = value;
         }
-        
+
         function setAllDefaults() {
             setDefault('n', 50);
             setDefault('p', 50);
@@ -33,30 +73,79 @@
             setDefault('humidity', 70);
             setDefault('rainfall', 150);
         }
-        
+
         function updateSoilImage() {
-            const soilType = document.getElementById('soil_type').value;
+            const soilTypeEl = document.getElementById('soil_type');
             const soilPreview = document.getElementById('soil-preview');
+            if (!soilTypeEl || !soilPreview) return;
+            const soilType = soilTypeEl.value;
             const soilImages = {
                 'Clay': 'https://images.unsplash.com/photo-1628600185380-58f5b1e663ae?w=300&h=200&fit=crop',
                 'Loam': 'https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?w=300&h=200&fit=crop',
                 'Sandy': 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=300&h=200&fit=crop'
             };
-            soilPreview.src = soilImages[soilType];
-            soilPreview.style.display = 'block';
+            const src = soilImages[soilType];
+            if (src) {
+                soilPreview.src = src;
+                soilPreview.style.display = 'block';
+            } else {
+                soilPreview.style.display = 'none';
+            }
         }
-        
-        window.onload = function() {
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const hasResultAttr = (document.body.dataset?.hasResult || document.body.getAttribute('data-has-result') || 'False').toString().toLowerCase();
+            const hasErrorAttr = (document.body.dataset?.hasError || document.body.getAttribute('data-has-error') || 'False').toString().toLowerCase();
+            const hasResult = hasResultAttr === 'true';
+            const hasError = hasErrorAttr === 'true';
+
+            if (hasResult || hasError) {
+                showScreen('screen-3');
+            } else {
+                showScreen('screen-1');
+                startLandingSequence();
+            }
+
             toggleMode();
             updateSoilImage();
-        }
+        });
     </script>
 </head>
-<body>
+<body data-has-result="{{ (result is not none) }}" data-has-error="{{ (error is not none) }}">
 
-<h1> Verdantia - Smart Gardening Assistant</h1>
+<div class="app">
+    <!-- SCREEN 1: Landing -->
+    <section id="screen-1" class="screen landing">
+        <div class="landing-inner">
+            <h1 class="brand">Verdantia</h1>
+            <p id="landing-msg-1" class="landing-message">Hi, welcome to Verdantia</p>
+            <p id="landing-msg-2" class="landing-message" style="display:none;">Your Smart Gardening Assistant</p>
+            <button id="get-started-btn" class="cta" style="display:none;" onclick="showScreen('screen-2')">Get Started</button>
+        </div>
+    </section>
 
-<form method="POST">
+    <!-- SCREEN 2: Mode Selection -->
+    <section id="screen-2" class="screen mode-select" style="display:none;">
+        <div class="mode-inner">
+            <h2>What would you like to do?</h2>
+            <div class="mode-options">
+                <button class="mode-card" onclick="selectModeAndContinue('recommend')">
+                    <span class="mode-emoji">🌱</span>
+                    <span class="mode-title">Plant Recommendation</span>
+                </button>
+                <button class="mode-card" onclick="selectModeAndContinue('diagnose')">
+                    <span class="mode-emoji">🌿</span>
+                    <span class="mode-title">Plant Health Advisor</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- SCREEN 3: Form + Results -->
+    <section id="screen-3" class="screen form-screen" style="display:none;">
+        <h1> Verdantia - Smart Gardening Assistant</h1>
+
+        <form method="POST">
     <div class="mode-selector">
         <label><strong>What would you like to do?</strong></label>
         <select name="mode" id="mode" onchange="toggleMode()">
@@ -236,7 +325,7 @@
     </div>
 
     <button type="submit">Analyze</button>
-</form>
+        </form>
 
 {% if error %}
 <div class="error">
@@ -308,6 +397,9 @@
     </details>
 </div>
 {% endif %}
+
+    </section>
+</div>
 
 </body>
 </html>
