@@ -28,12 +28,28 @@ Verdantia is a smart gardening assistant developed as a final project for a Know
 
 ```
 smart-gardening/
-├── data/          # Datasets and reference data
-├── models/        # Trained ML models (e.g., crop_model.pkl)
-├── utils/         # Rule-based diagnosis logic
-├── web_app/       # Flask web application
-├── requirements.txt
-└── README.md
+├── README.md # Project documentation
+├── requirements.txt # Python dependencies
+├── .git/ # Git version control data
+├── .gitignore # Git ignore rules
+├── data/ # Dataset files
+│ └── crop_recommendation2_cleaned.csv
+├── documentation/ # Project documentation (currently empty)
+├── models/ # Trained machine learning models
+│ └── crop_model.pkl
+├── notebook/ # Jupyter notebooks
+│ └── dataset.ipynb # Data exploration and preprocessing
+├── src/ # Source code (reserved for future use)
+├── utils/ # Helper modules
+│ └── rules.py # Rule-based diagnosis logic
+├── web_app/ # Flask web application
+│ ├── app.py # Main application file
+│ ├── static/ # Static assets (CSS, icons)
+│ │ ├── style.css
+│ │ └── info-icon.svg
+│ └── templates/ # HTML templates
+│ └── index.html
+└── venv/ # Python virtual environment
 ```
 
 ---
