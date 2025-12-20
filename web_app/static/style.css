@@ -1,0 +1,271 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f1f8f4;
+    padding: 30px;
+}
+
+h1 {
+    color: #2e7d32;
+}
+
+h3 {
+    color: #388e3c;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+form {
+    background-color: white;
+    padding: 20px;
+    max-width: 500px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.mode-selector {
+    background-color: #e8f5e9;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+.mode-selector label {
+    margin-bottom: 10px;
+    color: #2e7d32;
+}
+
+label {
+    margin-top: 10px;
+    display: block;
+    font-weight: 500;
+    color: #333;
+}
+
+.input-group {
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.info-btn {
+    width: auto;
+    display: inline-block;
+    background: #2196F3;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    font-size: 14px;
+    cursor: pointer;
+    padding: 4px;
+    margin-left: 5px;
+    vertical-align: middle;
+}
+
+.info-btn:hover {
+    background: #1976D2;
+}
+
+.info-icon {
+    width: 16px;
+    height: 16px;
+    display: block;
+    filter: brightness(0) invert(1);
+}
+
+.tooltip {
+    display: none;
+    background-color: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 5px 0 10px 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #856404;
+}
+
+.default-btn {
+    width: auto;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    margin-top: 8px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.default-btn:hover {
+    background-color: #45a049;
+}
+
+.default-all-section {
+    background-color: #e3f2fd;
+    border: 2px solid #2196F3;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 20px 0;
+    text-align: center;
+}
+
+.default-all-btn {
+    width: auto;
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 24px;
+    margin: 10px 0;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.default-all-btn:hover {
+    background-color: #1976D2;
+}
+
+.hint-text {
+    font-size: 12px;
+    color: #666;
+    margin: 5px 0 0 0;
+    font-style: italic;
+}
+
+input, select, button {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.soil-preview {
+    display: none;
+    width: 100%;
+    max-width: 300px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-top: 10px;
+    border: 2px solid #4caf50;
+}
+
+button {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    margin-top: 15px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 12px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+.result {
+    background-color: #e8f5e9;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 10px;
+    max-width: 500px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.error {
+    background-color: #ffebee;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 10px;
+    max-width: 500px;
+    color: #c62828;
+    border-left: 4px solid #c62828;
+}
+
+.recommendation, .diagnosis {
+    margin-bottom: 15px;
+}
+
+.crop-display {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background-color: white;
+    border-radius: 8px;
+    margin: 10px 0;
+}
+
+.crop-icon {
+    font-size: 64px;
+    line-height: 1;
+}
+
+.crop-name {
+    font-size: 24px;
+    font-weight: bold;
+    color: #2e7d32;
+    text-transform: capitalize;
+    margin: 0;
+}
+
+.condition-badge {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.condition-healthy {
+    background-color: #c8e6c9;
+    color: #1b5e20;
+}
+
+.condition-overwatered,
+.condition-underwatered,
+.condition-flood-/-waterlogging-risk {
+    background-color: #ffcdd2;
+    color: #b71c1c;
+}
+
+.condition-pest-risk,
+.condition-nutrient-deficiency {
+    background-color: #ffe0b2;
+    color: #e65100;
+}
+
+.details {
+    margin-top: 20px;
+    background-color: white;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.details summary {
+    cursor: pointer;
+    font-weight: bold;
+    color: #2e7d32;
+    padding: 5px;
+}
+
+.details ul {
+    list-style: none;
+    padding: 10px;
+    margin: 5px 0;
+}
+
+.details li {
+    padding: 5px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.details li:last-child {
+    border-bottom: none;
+}
