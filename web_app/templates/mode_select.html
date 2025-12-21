@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Verdantia - Mode Selection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body class="show-navbar">
+
+{% include "partials/navbar.html" %}
+
+<!-- MAIN CONTENT -->
+<main class="page-content">
+    <section class="screen mode-select">
+        <div class="main-container">
+            
+            <!-- PAGE TITLE -->
+            <div class="page-header">
+                <h1 class="page-title">Choose a Mode</h1>
+                <p class="page-subtitle">Select how you want to use the Smart Gardening Assistant.</p>
+            </div>
+
+            <!-- MODE SELECTION (PRIMARY INTERACTIVE SECTION) -->
+            <div class="mode-selection">
+                <div class="mode-cards">
+                    <a class="mode-card" href="{{ url_for('recommend') }}">
+                        <div class="mode-icon">
+                            <i data-lucide="seedling"></i>
+                        </div>
+                        <h3 class="mode-title">Plant Recommendation Mode</h3>
+                        <p class="mode-description">Recommends suitable crops based on soil and environmental conditions.</p>
+                    </a>
+
+                    <a class="mode-card" href="{{ url_for('advisor') }}">
+                        <div class="mode-icon">
+                            <i data-lucide="stethoscope"></i>
+                        </div>
+                        <h3 class="mode-title">Plant Health Advisor Mode</h3>
+                        <p class="mode-description">Identifies potential plant health risks and provides care advice.</p>
+                    </a>
+                </div>
+            </div>
+
+            <!-- SYSTEM ANALYSIS FACTORS (INFORMATIONAL SECTION) -->
+            <div class="system-analysis">
+                <div class="analysis-header">
+                    <h2 class="analysis-title">What the System Analyzes</h2>
+                    <p class="analysis-subtitle">These factors are evaluated internally during analysis.</p>
+                </div>
+
+                <div class="analysis-factors">
+                    <div class="factor-card">
+                        <div class="factor-icon">
+                            <i data-lucide="droplets"></i>
+                        </div>
+                        <h4 class="factor-title">Water</h4>
+                        <ul class="factor-details">
+                            <li>Rainfall patterns</li>
+                            <li>Irrigation levels</li>
+                            <li>Soil moisture conditions</li>
+                        </ul>
+                        <p class="factor-why"><strong>Why it matters:</strong> Improper water levels are a common cause of plant stress and root damage.</p>
+                    </div>
+
+                    <div class="factor-card">
+                        <div class="factor-icon">
+                            <i data-lucide="sun"></i>
+                        </div>
+                        <h4 class="factor-title">Sunlight</h4>
+                        <ul class="factor-details">
+                            <li>Daily sunlight exposure</li>
+                            <li>Crop-specific light requirements</li>
+                        </ul>
+                        <p class="factor-why"><strong>Why it matters:</strong> Adequate sunlight supports photosynthesis and healthy growth.</p>
+                    </div>
+
+                    <div class="factor-card">
+                        <div class="factor-icon">
+                            <i data-lucide="thermometer"></i>
+                        </div>
+                        <h4 class="factor-title">Climate & Environment</h4>
+                        <ul class="factor-details">
+                            <li>Temperature</li>
+                            <li>Humidity</li>
+                            <li>Local climate type (e.g., Tropical Wet, Urban Heat Zone)</li>
+                        </ul>
+                        <p class="factor-why"><strong>Why it matters:</strong> Climate affects watering needs, pest activity, and overall plant health.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</main>
+
+<script>
+    lucide.createIcons();
+</script>
+
+</body>
+</html>

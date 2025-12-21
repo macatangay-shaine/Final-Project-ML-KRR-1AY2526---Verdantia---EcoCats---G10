@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Smart Gardening Assistant</title>
+    <title>Verdantia - Smart Gardening Assistant</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script>
         // Screen controls
@@ -10,31 +10,40 @@
             screens.forEach(s => s.style.display = 'none');
             const el = document.getElementById(id);
             if (el) el.style.display = 'block';
+
+            // Hide profile bar and navbar on landing; show on other screens
+            const profileBar = document.querySelector('.profile-bar');
+            const navbar = document.querySelector('.navbar');
+            if (profileBar) {
+                profileBar.style.display = (id === 'screen-1') ? 'none' : 'flex';
+            }
+            if (navbar) {
+                navbar.style.display = (id === 'screen-1') ? 'none' : 'flex';
+            }
         }
 
         function startLandingSequence() {
-            const msg1 = document.getElementById('landing-msg-1');
-            const msg2 = document.getElementById('landing-msg-2');
-            const cta = document.getElementById('get-started-btn');
-            if (!msg1 || !msg2 || !cta) return;
+            // Show first landing slide then switch to second slide after 3s
+            const slide1 = document.querySelector('.landing-slide-1');
+            const slide2 = document.querySelector('.landing-slide-2');
+            if (slide1) {
+                slide1.style.display = 'block';
+                slide1.classList.add('fade-in');
+            }
 
-            // Step 1: Fade in first message
-            msg1.classList.add('fade-in');
+            // After ~3s, fade slide1 out and fade slide2 in
             setTimeout(() => {
-                // Step 2: Fade out first, then show second
-                msg1.classList.remove('fade-in');
-                msg1.classList.add('fade-out');
+                if (!slide1 || !slide2) return;
+                slide1.classList.remove('fade-in');
+                slide1.classList.add('fade-out');
+                // wait for fade-out then swap (shortened for snappier UX)
                 setTimeout(() => {
-                    msg1.style.display = 'none';
-                    msg2.style.display = 'block';
-                    msg2.classList.add('fade-in');
-                    // Step 3: Show CTA
-                    setTimeout(() => {
-                        cta.style.display = 'inline-block';
-                        cta.classList.add('fade-in');
-                    }, 800);
-                }, 800);
-            }, 1200);
+                    slide1.style.display = 'none';
+                    slide1.classList.remove('fade-out');
+                    slide2.style.display = 'block';
+                    slide2.classList.add('fade-in');
+                }, 550);
+            }, 3000);
         }
 
         // Existing helpers
@@ -210,6 +219,9 @@
 </head>
 <body data-has-result="{{ (result is not none) }}" data-has-error="{{ (error is not none) }}">
 
+{% include "partials/navbar.html" %}
+
+<main class="page-content">
 <div class="app">
     <!-- Profile Bar: Local-only personalization (no auth) -->
     <div class="profile-bar">
@@ -224,294 +236,372 @@
         <div class="profile-summary">Hello, <span id="username-display">Gardener</span> 🌿</div>
     </div>
     <!-- SCREEN 1: Landing -->
-    <section id="screen-1" class="screen landing">
-        <div class="landing-inner">
-            <h1 class="brand">Verdantia</h1>
-            <p id="landing-msg-1" class="landing-message">Hi, welcome to Verdantia</p>
-            <p id="landing-msg-2" class="landing-message" style="display:none;">Your Smart Gardening Assistant</p>
-            <button id="get-started-btn" class="cta" style="display:none;" onclick="showScreen('screen-2')">Get Started</button>
+    <section id="screen-1" class="screen hero-landing">
+        <div class="hero-overlay">
+            <!-- Slide 1: initial headline -->
+            <div class="landing-slide landing-slide-1" style="display:none;">
+                <div class="hero-text">
+                    <h1>Welcome to Verdantia</h1>
+                    <p>Your Smart Gardening Assistant</p>   
+                </div>
+            </div>
+
+            <!-- Slide 2: follow-up with Proceed button -->
+            <div class="landing-slide landing-slide-2" style="display:none;">
+                <div class="hero-text">     
+                    <h1>Verdantia is a Smart Gardening Assistant</h1>
+                    <p>Using machine learning and smart plant knowledge to help you grow healthier crops.</p>
+                    <button class="cta getsarted-btn" onclick="showScreen('screen-2')">Get Started</button>
+                </div>
+            </div>
         </div>
     </section>
 
     <!-- SCREEN 2: Mode Selection -->
     <section id="screen-2" class="screen mode-select" style="display:none;">
-        <div class="mode-inner">
-            <h2>What would you like to do?</h2>
-            <div class="mode-options">
-                <button class="mode-card" onclick="selectModeAndContinue('recommend')">
-                    <span class="mode-emoji">🌱</span>
-                    <span class="mode-title">Plant Recommendation</span>
+        <div class="mode-inner two-column">
+            <div class="mode-left">
+                <div class="logo-and-title">
+                    <img src="{{ url_for('static', filename='logo.png') }}" alt="Verdantia" class="mini-logo" onerror="this.style.display='none'">
+                    <h2>Choose a mode</h2>
+                </div>
+
+                <button class="mode-button" onclick="selectModeAndContinue('recommend')">
+                    <div class="btn-icon">🍃</div>
+                    <div class="btn-text">
+                        <div class="btn-title">Plant Recommendation</div>
+                        <div class="btn-sub">Find the best crop for your soil & climate</div>
+                    </div>
                 </button>
-                <button class="mode-card" onclick="selectModeAndContinue('diagnose')">
-                    <span class="mode-emoji">🌿</span>
-                    <span class="mode-title">Plant Health Advisor</span>
+
+                <button class="mode-button secondary" onclick="selectModeAndContinue('diagnose')">
+                    <div class="btn-icon">💚</div>
+                    <div class="btn-text">
+                        <div class="btn-title">Plant Health Advisor</div>
+                        <div class="btn-sub">Diagnose issues and get care tips</div>
+                    </div>
                 </button>
+            </div>
+
+            <div class="mode-right">
+                <div class="info-card">
+                    <div class="info-item">
+                        <div class="info-icon">💧</div>
+                        <div class="info-body">
+                            <div class="info-title">Water analysis</div>
+                            <div class="info-sub">Monitor and optimize your watering schedule.</div>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-icon">☀️</div>
+                        <div class="info-body">
+                            <div class="info-title">Sunlight analysis</div>
+                            <div class="info-sub">Find the perfect spot for each plant</div>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-icon">🌬️</div>
+                        <div class="info-body">
+                            <div class="info-title">Soil analysis</div>
+                            <div class="info-sub">Weather-based care recommendations</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- SCREEN 3: Form + Results -->
+    <!-- SCREEN 3: Form + Results (two-column) -->
     <section id="screen-3" class="screen form-screen" style="display:none;">
-        <h1> Verdantia - Smart Gardening Assistant</h1>
-
-        <form method="POST">
-    <!-- Hidden inputs to provide session fallback during active sessions -->
-    <input type="hidden" name="profile_username" id="profile_username_hidden" />
-    <input type="hidden" name="profile_avatar" id="profile_avatar_hidden" />
-    <div class="mode-selector">
-        <label><strong>What would you like to do?</strong></label>
-        <select name="mode" id="mode" onchange="toggleMode()">
-            <option value="recommend">Get Plant Recommendation</option>
-            <option value="diagnose">Diagnose My Plant Health</option>
-        </select>
-    </div>
-
-    <div id="plant-field" style="display: none;">
-        <label>Current Plant (for diagnosis)</label>
-        <input type="text" name="current_plant" placeholder="e.g., tomato, lettuce, rice">
-    </div>
-
-    <h3>Environmental Conditions</h3>
-
-    <div class="input-group">
-        <label>Nitrogen (N) 
-            <button type="button" class="info-btn" onclick="toggleTooltip('tooltip-n')">
-                <img src="{{ url_for('static', filename='info-icon.svg') }}" alt="info" class="info-icon">
-            </button>
-        </label>
-        <div id="tooltip-n" class="tooltip">
-            <strong>Nitrogen (N):</strong> Essential for leaf growth and green color. Typical range: 0-140 kg/ha.<br>
-            <strong>💰 No test kit?</strong> Visual clues:<br>
-            • Dark green leaves = High (60-90)<br>
-            • Yellow/pale leaves = Low (20-40)<br>
-            • Normal green = Medium (40-60)<br>
-            <button type="button" class="default-btn" onclick="setDefault('n', 50)">Use Typical (50)</button>
-        </div>
-        <input type="number" step="any" name="n" required placeholder="e.g., 90">
-    </div>
-
-    <div class="input-group">
-        <label>Phosphorus (P) 
-            <button type="button" class="info-btn" onclick="toggleTooltip('tooltip-p')">
-                <img src="{{ url_for('static', filename='info-icon.svg') }}" alt="info" class="info-icon">
-            </button>
-        </label>
-        <div id="tooltip-p" class="tooltip">
-            <strong>Phosphorus (P):</strong> Vital for root development, flowering, and fruiting. Typical range: 5-145 kg/ha.<br>
-            <strong>💰 No test kit?</strong> Observe plants:<br>
-            • Purple/dark leaves = Low (20-40)<br>
-            • Slow flowering = Low (20-40)<br>
-            • Normal growth = Medium (40-60)<br>
-            <button type="button" class="default-btn" onclick="setDefault('p', 50)">Use Typical (50)</button>
-        </div>
-        <input type="number" step="any" name="p" required placeholder="e.g., 42">
-    </div>
-
-    <div class="input-group">
-        <label>Potassium (K) 
-            <button type="button" class="info-btn" onclick="toggleTooltip('tooltip-k')">
-                <img src="{{ url_for('static', filename='info-icon.svg') }}" alt="info" class="info-icon">
-            </button>
-        </label>
-        <div id="tooltip-k" class="tooltip">
-            <strong>Potassium (K):</strong> Strengthens plants, improves disease resistance. Typical range: 5-205 kg/ha.<br>
-            <strong>💰 No test kit?</strong> Signs:<br>
-            • Brown leaf edges = Low (20-40)<br>
-            • Weak stems = Low (20-40)<br>
-            • Healthy stems = Medium (40-60)<br>
-            <button type="button" class="default-btn" onclick="setDefault('k', 50)">Use Typical (50)</button>
-        </div>
-        <input type="number" step="any" name="k" required placeholder="e.g., 43">
-    </div>
-
-    <div class="input-group">
-        <label>pH Level 
-            <button type="button" class="info-btn" onclick="toggleTooltip('tooltip-ph')">
-                <img src="{{ url_for('static', filename='info-icon.svg') }}" alt="info" class="info-icon">
-            </button>
-        </label>
-        <div id="tooltip-ph" class="tooltip">
-            <strong>pH Level:</strong> Measures soil acidity/alkalinity. Scale: 0-14. Neutral = 7. Most plants prefer 6-7.5.<br>
-            <strong>💰 DIY Test:</strong><br>
-            • Mix soil + vinegar → Fizzes = Alkaline (7.5+)<br>
-            • Mix soil + baking soda water → Fizzes = Acidic (5.5-)<br>
-            • No fizz = Neutral (6-7)<br>
-            <strong>Or use red cabbage juice as pH indicator!</strong><br>
-            <button type="button" class="default-btn" onclick="setDefault('ph', 6.5)">Use Neutral (6.5)</button>
-        </div>
-        <input type="number" step="any" name="ph" required placeholder="e.g., 6.5" min="0" max="14">
-    </div>
-
-    <div class="input-group">
-        <label>Temperature (°C) 
-            <button type="button" class="info-btn" onclick="toggleTooltip('tooltip-temp')">
-                <img src="{{ url_for('static', filename='info-icon.svg') }}" alt="info" class="info-icon">
-            </button>
-        </label>
-        <div id="tooltip-temp" class="tooltip">
-            <strong>Temperature:</strong> Average daily temperature in Celsius. Typical range: 8-45°C.<br>
-            <strong>💰 Free:</strong> Check weather apps, Google, or weather.com for your location.<br>
-            <button type="button" class="default-btn" onclick="setDefault('temperature', 25)">Use Tropical (25°C)</button>
-        </div>
-        <input type="number" step="any" name="temperature" required placeholder="e.g., 25">
-    </div>
-
-    <div class="input-group">
-        <label>Humidity (%) 
-            <button type="button" class="info-btn" onclick="toggleTooltip('tooltip-humidity')">
-                <img src="{{ url_for('static', filename='info-icon.svg') }}" alt="info" class="info-icon">
-            </button>
-        </label>
-        <div id="tooltip-humidity" class="tooltip">
-            <strong>Humidity:</strong> Percentage of moisture in the air. Range: 14-100%.<br>
-            <strong>💰 Free:</strong> Check weather apps or websites.<br>
-            • Coastal/rainy areas: 70-90%<br>
-            • Dry areas: 30-50%<br>
-            <button type="button" class="default-btn" onclick="setDefault('humidity', 70)">Use Typical (70%)</button>
-        </div>
-        <input type="number" step="any" name="humidity" required placeholder="e.g., 80" min="0" max="100">
-    </div>
-
-    <div class="input-group">
-        <label>Rainfall (mm) 
-            <button type="button" class="info-btn" onclick="toggleTooltip('tooltip-rainfall')">
-                <img src="{{ url_for('static', filename='info-icon.svg') }}" alt="info" class="info-icon">
-            </button>
-        </label>
-        <div id="tooltip-rainfall" class="tooltip">
-            <strong>Rainfall:</strong> Average monthly or annual rainfall in millimeters.<br>
-            <strong>💰 Free:</strong> Google "average rainfall [your city]" or check weather websites.<br>
-            • Heavy rain: 200+ mm/month<br>
-            • Moderate: 100-200 mm/month<br>
-            • Light: 50-100 mm/month<br>
-            <button type="button" class="default-btn" onclick="setDefault('rainfall', 150)">Use Moderate (150mm)</button>
-        </div>
-        <input type="number" step="any" name="rainfall" required placeholder="e.g., 200">
-    </div>
-
-    <div class="input-group">
-        <label>Soil Type 
-            <button type="button" class="info-btn" onclick="toggleTooltip('tooltip-soil')">
-                <img src="{{ url_for('static', filename='info-icon.svg') }}" alt="info" class="info-icon">
-            </button>
-        </label>
-        <div id="tooltip-soil" class="tooltip">
-            <strong>Soil Types:</strong><br>
-            • <strong>Clay:</strong> Heavy, sticky when wet, holds water well<br>
-            • <strong>Loam:</strong> Balanced mix, ideal for most plants<br>
-            • <strong>Sandy:</strong> Light, drains quickly, feels gritty
-        </div>
-        <select name="soil_type" id="soil_type" onchange="updateSoilImage()">
-            <option value="Clay">Clay (Heavy, water-retaining)</option>
-            <option value="Loam">Loam (Balanced, ideal)</option>
-            <option value="Sandy">Sandy (Light, fast-draining)</option>
-        </select>
-        <img id="soil-preview" class="soil-preview" alt="Soil preview">
-    </div>
-
-    <div class="input-group">
-        <label>Climate Type 
-            <button type="button" class="info-btn" onclick="toggleTooltip('tooltip-climate')">
-                <img src="{{ url_for('static', filename='info-icon.svg') }}" alt="info" class="info-icon">
-            </button>
-        </label>
-        <div id="tooltip-climate" class="tooltip">
-            <strong>Climate Types:</strong><br>
-            • <strong>Tropical Wet:</strong> High rainfall year-round<br>
-            • <strong>Tropical Moist:</strong> Wet/dry seasons<br>
-            • <strong>Tropical Dry:</strong> Long dry periods<br>
-            • <strong>Urban Heat Zone:</strong> City areas with heat buildup
-        </div>
-        <select name="climate">
-            <option value="Tropical Wet">Tropical Wet (Rainy year-round)</option>
-            <option value="Tropical Moist">Tropical Moist (Seasonal rain)</option>
-            <option value="Tropical Dry">Tropical Dry (Long dry spells)</option>
-            <option value="Urban Heat Zone">Urban Heat Zone (City heat)</option>
-        </select>
-    </div>
-
-    <div class="default-all-section">
-        <p><strong>💡 Don't have testing equipment?</strong></p>
-        <button type="button" class="default-all-btn" onclick="setAllDefaults()">📝 Fill with Typical Values</button>
-        <p class="hint-text">Use typical values for tropical gardening, then adjust based on your observations</p>
-    </div>
-
-    <button type="submit">Analyze</button>
-        </form>
-
-{% if error %}
-<div class="error">
-    <h2>⚠️ Error</h2>
-    <p>{{ error }}</p>
-</div>
-{% endif %}
-
-{% if result %}
-<div class="result">
-    <h2>📊 Results</h2>
-    
-    {% if result.mode == 'recommend' %}
-        <div class="recommendation">
-            <h3>🌾 Recommended Crop</h3>
-            <div class="crop-display">
-                <div class="crop-icon">
-                    {% if result.crop in ['rice', 'wheat', 'maize'] %}
-                        🌾
-                    {% elif result.crop in ['apple', 'banana', 'mango', 'orange', 'papaya', 'watermelon', 'grapes', 'pomegranate'] %}
-                        🍎
-                    {% elif result.crop in ['tomato', 'potato', 'carrot', 'lettuce', 'spinach'] %}
-                        🥬
-                    {% elif result.crop in ['coffee', 'cotton'] %}
-                        ☕
-                    {% else %}
-                        🌱
-                    {% endif %}
-                </div>
-                <p class="crop-name">{{ result.crop }}</p>
+        <div class="form-header">
+            <button class="back-btn" onclick="showScreen('screen-2')">‹</button>
+            <div class="form-title">Plant Recommendation</div>
+            <div class="form-actions">
+                <button class="icon-btn" title="Profile">👤</button>
+                <button class="icon-btn" title="Close" onclick="showScreen('screen-1')">✕</button>
             </div>
-            <p><strong>Message:</strong> {{ result.message }}</p>
         </div>
-    {% elif result.mode == 'diagnose' %}
-        <div class="diagnosis">
-            <h3>🔍 Plant Health Diagnosis: {{ result.plant }}</h3>
-            <div class="condition-badge condition-{{ result.condition.lower().replace(' ', '-') }}">
-                {% if result.condition == 'Healthy' %}
-                    ✅ {{ result.condition }}
-                {% elif result.condition in ['Overwatered', 'Flood / Waterlogging Risk'] %}
-                    💧 {{ result.condition }}
-                {% elif result.condition == 'Underwatered' %}
-                    🏜️ {{ result.condition }}
-                {% elif result.condition == 'Pest Risk' %}
-                    🐛 {{ result.condition }}
-                {% elif result.condition == 'Nutrient Deficiency' %}
-                    🌱 {{ result.condition }}
-                {% else %}
-                    ⚠️ {{ result.condition }}
+
+        <div class="form-results-grid">
+            <div class="form-panel">
+                <form method="POST">
+                    <!-- Hidden inputs to provide session fallback during active sessions -->
+                    <input type="hidden" name="profile_username" id="profile_username_hidden" />
+                    <input type="hidden" name="profile_avatar" id="profile_avatar_hidden" />
+
+                    <div class="compact-mode-selector">
+                        <label><strong>Mode</strong></label>
+                        <select name="mode" id="mode" onchange="toggleMode(); updateFormTitle();">
+                            <option value="recommend">Get Plant Recommendation</option>
+                            <option value="diagnose">Diagnose My Plant Health</option>
+                        </select>
+                    </div>
+
+                    <div id="plant-field" style="display: none;">
+                        <label>Current Plant (for diagnosis)</label>
+                        <input type="text" name="current_plant" placeholder="e.g., tomato, lettuce, rice">
+                    </div>
+
+                    <h3>Environmental Conditions</h3>
+
+                    <!-- (keep input groups unchanged) -->
+                    <div class="input-group">
+                        <label>Nitrogen (N) 
+                            <button type="button" class="info-btn" onclick="toggleTooltip('tooltip-n')">
+                                <img src="{{ url_for('static', filename='info-icon.svg') }}" alt="info" class="info-icon">
+                            </button>
+                        </label>
+                        <div id="tooltip-n" class="tooltip">
+                            <strong>Nitrogen (N):</strong> Essential for leaf growth and green color. Typical range: 0-140 kg/ha.<br>
+                            <strong>💰 No test kit?</strong> Visual clues:<br>
+                            • Dark green leaves = High (60-90)<br>
+                            • Yellow/pale leaves = Low (20-40)<br>
+                            • Normal green = Medium (40-60)<br>
+                            <button type="button" class="default-btn" onclick="setDefault('n', 50)">Use Typical (50)</button>
+                        </div>
+                        <input type="number" step="any" name="n" required placeholder="e.g., 90">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Phosphorus (P) 
+                            <button type="button" class="info-btn" onclick="toggleTooltip('tooltip-p')">
+                                <img src="{{ url_for('static', filename='info-icon.svg') }}" alt="info" class="info-icon">
+                            </button>
+                        </label>
+                        <div id="tooltip-p" class="tooltip">
+                            <strong>Phosphorus (P):</strong> Vital for root development, flowering, and fruiting. Typical range: 5-145 kg/ha.<br>
+                            <strong>💰 No test kit?</strong> Observe plants:<br>
+                            • Purple/dark leaves = Low (20-40)<br>
+                            • Slow flowering = Low (20-40)<br>
+                            • Normal growth = Medium (40-60)<br>
+                            <button type="button" class="default-btn" onclick="setDefault('p', 50)">Use Typical (50)</button>
+                        </div>
+                        <input type="number" step="any" name="p" required placeholder="e.g., 42">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Potassium (K) 
+                            <button type="button" class="info-btn" onclick="toggleTooltip('tooltip-k')">
+                                <img src="{{ url_for('static', filename='info-icon.svg') }}" alt="info" class="info-icon">
+                            </button>
+                        </label>
+                        <div id="tooltip-k" class="tooltip">
+                            <strong>Potassium (K):</strong> Strengthens plants, improves disease resistance. Typical range: 5-205 kg/ha.<br>
+                            <strong>💰 No test kit?</strong> Signs:<br>
+                            • Brown leaf edges = Low (20-40)<br>
+                            • Weak stems = Low (20-40)<br>
+                            • Healthy stems = Medium (40-60)<br>
+                            <button type="button" class="default-btn" onclick="setDefault('k', 50)">Use Typical (50)</button>
+                        </div>
+                        <input type="number" step="any" name="k" required placeholder="e.g., 43">
+                    </div>
+
+                    <div class="input-group">
+                        <label>pH Level 
+                            <button type="button" class="info-btn" onclick="toggleTooltip('tooltip-ph')">
+                                <img src="{{ url_for('static', filename='info-icon.svg') }}" alt="info" class="info-icon">
+                            </button>
+                        </label>
+                        <div id="tooltip-ph" class="tooltip">
+                            <strong>pH Level:</strong> Measures soil acidity/alkalinity. Scale: 0-14. Neutral = 7. Most plants prefer 6-7.5.<br>
+                            <strong>💰 DIY Test:</strong><br>
+                            • Mix soil + vinegar → Fizzes = Alkaline (7.5+)<br>
+                            • Mix soil + baking soda water → Fizzes = Acidic (5.5-)<br>
+                            • No fizz = Neutral (6-7)<br>
+                            <strong>Or use red cabbage juice as pH indicator!</strong><br>
+                            <button type="button" class="default-btn" onclick="setDefault('ph', 6.5)">Use Neutral (6.5)</button>
+                        </div>
+                        <input type="number" step="any" name="ph" required placeholder="e.g., 6.5" min="0" max="14">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Temperature (°C) 
+                            <button type="button" class="info-btn" onclick="toggleTooltip('tooltip-temp')">
+                                <img src="{{ url_for('static', filename='info-icon.svg') }}" alt="info" class="info-icon">
+                            </button>
+                        </label>
+                        <div id="tooltip-temp" class="tooltip">
+                            <strong>Temperature:</strong> Average daily temperature in Celsius. Typical range: 8-45°C.<br>
+                            <strong>💰 Free:</strong> Check weather apps, Google, or weather.com for your location.<br>
+                            <button type="button" class="default-btn" onclick="setDefault('temperature', 25)">Use Tropical (25°C)</button>
+                        </div>
+                        <input type="number" step="any" name="temperature" required placeholder="e.g., 25">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Humidity (%) 
+                            <button type="button" class="info-btn" onclick="toggleTooltip('tooltip-humidity')">
+                                <img src="{{ url_for('static', filename='info-icon.svg') }}" alt="info" class="info-icon">
+                            </button>
+                        </label>
+                        <div id="tooltip-humidity" class="tooltip">
+                            <strong>Humidity:</strong> Percentage of moisture in the air. Range: 14-100%.<br>
+                            <strong>💰 Free:</strong> Check weather apps or websites.<br>
+                            • Coastal/rainy areas: 70-90%<br>
+                            • Dry areas: 30-50%<br>
+                            <button type="button" class="default-btn" onclick="setDefault('humidity', 70)">Use Typical (70%)</button>
+                        </div>
+                        <input type="number" step="any" name="humidity" required placeholder="e.g., 80" min="0" max="100">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Rainfall (mm) 
+                            <button type="button" class="info-btn" onclick="toggleTooltip('tooltip-rainfall')">
+                                <img src="{{ url_for('static', filename='info-icon.svg') }}" alt="info" class="info-icon">
+                            </button>
+                        </label>
+                        <div id="tooltip-rainfall" class="tooltip">
+                            <strong>Rainfall:</strong> Average monthly or annual rainfall in millimeters.<br>
+                            <strong>💰 Free:</strong> Google "average rainfall [your city]" or check weather websites.<br>
+                            • Heavy rain: 200+ mm/month<br>
+                            • Moderate: 100-200 mm/month<br>
+                            • Light: 50-100 mm/month<br>
+                            <button type="button" class="default-btn" onclick="setDefault('rainfall', 150)">Use Moderate (150mm)</button>
+                        </div>
+                        <input type="number" step="any" name="rainfall" required placeholder="e.g., 200">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Soil Type 
+                            <button type="button" class="info-btn" onclick="toggleTooltip('tooltip-soil')">
+                                <img src="{{ url_for('static', filename='info-icon.svg') }}" alt="info" class="info-icon">
+                            </button>
+                        </label>
+                        <div id="tooltip-soil" class="tooltip">
+                            <strong>Soil Types:</strong><br>
+                            • <strong>Clay:</strong> Heavy, sticky when wet, holds water well<br>
+                            • <strong>Loam:</strong> Balanced mix, ideal for most plants<br>
+                            • <strong>Sandy:</strong> Light, drains quickly, feels gritty
+                        </div>
+                        <select name="soil_type" id="soil_type" onchange="updateSoilImage()">
+                            <option value="Clay">Clay (Heavy, water-retaining)</option>
+                            <option value="Loam">Loam (Balanced, ideal)</option>
+                            <option value="Sandy">Sandy (Light, fast-draining)</option>
+                        </select>
+                        <img id="soil-preview" class="soil-preview" alt="Soil preview">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Climate Type 
+                            <button type="button" class="info-btn" onclick="toggleTooltip('tooltip-climate')">
+                                <img src="{{ url_for('static', filename='info-icon.svg') }}" alt="info" class="info-icon">
+                            </button>
+                        </label>
+                        <div id="tooltip-climate" class="tooltip">
+                            <strong>Climate Types:</strong><br>
+                            • <strong>Tropical Wet:</strong> High rainfall year-round<br>
+                            • <strong>Tropical Moist:</strong> Wet/dry seasons<br>
+                            • <strong>Tropical Dry:</strong> Long dry periods<br>
+                            • <strong>Urban Heat Zone:</strong> City areas with heat buildup
+                        </div>
+                        <select name="climate">
+                            <option value="Tropical Wet">Tropical Wet (Rainy year-round)</option>
+                            <option value="Tropical Moist">Tropical Moist (Seasonal rain)</option>
+                            <option value="Tropical Dry">Tropical Dry (Long dry spells)</option>
+                            <option value="Urban Heat Zone">Urban Heat Zone (City heat)</option>
+                        </select>
+                    </div>
+
+                    <div class="default-all-section">
+                        <p><strong>💡 Don't have testing equipment?</strong></p>
+                        <button type="button" class="default-all-btn" onclick="setAllDefaults()">📝 Fill with Typical Values</button>
+                        <p class="hint-text">Use typical values for tropical gardening, then adjust based on your observations</p>
+                    </div>
+
+                    <button type="submit" class="analyze-btn">Analyze</button>
+                </form>
+            </div>
+
+            <div class="results-panel">
+                <!-- Errors and Results moved into right column -->
+                {% if error %}
+                <div class="error">
+                    <h2>⚠️ Error</h2>
+                    <p>{{ error }}</p>
+                </div>
+                {% endif %}
+
+                {% if result %}
+                <div class="result card">
+                    <h2>📊 Results</h2>
+                    {% if result.mode == 'recommend' %}
+                        <div class="recommendation">
+                            <h3>🌾 Recommended Crop</h3>
+                            <div class="crop-display">
+                                <div class="crop-icon">
+                                    {% if result.crop in ['rice', 'wheat', 'maize'] %}
+                                        🌾
+                                    {% elif result.crop in ['apple', 'banana', 'mango', 'orange', 'papaya', 'watermelon', 'grapes', 'pomegranate'] %}
+                                        🍎
+                                    {% elif result.crop in ['tomato', 'potato', 'carrot', 'lettuce', 'spinach'] %}
+                                        🥬
+                                    {% elif result.crop in ['coffee', 'cotton'] %}
+                                        ☕
+                                    {% else %}
+                                        🌱
+                                    {% endif %}
+                                </div>
+                                <p class="crop-name">{{ result.crop }}</p>
+                            </div>
+                            <p><strong>Message:</strong> {{ result.message }}</p>
+                        </div>
+                    {% elif result.mode == 'diagnose' %}
+                        <div class="diagnosis">
+                            <h3>🔍 Plant Health Diagnosis: {{ result.plant }}</h3>
+                            <div class="condition-badge condition-{{ result.condition.lower().replace(' ', '-') }}">
+                                {% if result.condition == 'Healthy' %}
+                                    ✅ {{ result.condition }}
+                                {% elif result.condition in ['Overwatered', 'Flood / Waterlogging Risk'] %}
+                                    💧 {{ result.condition }}
+                                {% elif result.condition == 'Underwatered' %}
+                                    🏜️ {{ result.condition }}
+                                {% elif result.condition == 'Pest Risk' %}
+                                    🐛 {{ result.condition }}
+                                {% elif result.condition == 'Nutrient Deficiency' %}
+                                    🌱 {{ result.condition }}
+                                {% else %}
+                                    ⚠️ {{ result.condition }}
+                                {% endif %}
+                            </div>
+                            <p><strong>Reason:</strong> {{ result.reason }}</p>
+                            <p><strong>💡 Advice:</strong> {{ result.advice }}</p>
+                        </div>
+                    {% endif %}
+
+                    <details class="details">
+                        <summary>View Environmental Conditions</summary>
+                        <ul>
+                            <li>Nitrogen: {{ result.inputs.n }}</li>
+                            <li>Phosphorus: {{ result.inputs.p }}</li>
+                            <li>Potassium: {{ result.inputs.k }}</li>
+                            <li>Temperature: {{ result.inputs.temperature }}°C</li>
+                            <li>Humidity: {{ result.inputs.humidity }}%</li>
+                            <li>Rainfall: {{ result.inputs.rainfall }}mm</li>
+                            <li>Soil Type: {{ result.inputs.soil_type }}</li>
+                            <li>Climate: {{ result.inputs.climate }}</li>
+                        </ul>
+                    </details>
+                </div>
                 {% endif %}
             </div>
-            <p><strong>Reason:</strong> {{ result.reason }}</p>
-            <p><strong>💡 Advice:</strong> {{ result.advice }}</p>
         </div>
-    {% endif %}
-    
-    <details class="details">
-        <summary>View Environmental Conditions</summary>
-        <ul>
-            <li>Nitrogen: {{ result.inputs.n }}</li>
-            <li>Phosphorus: {{ result.inputs.p }}</li>
-            <li>Potassium: {{ result.inputs.k }}</li>
-            <li>Temperature: {{ result.inputs.temperature }}°C</li>
-            <li>Humidity: {{ result.inputs.humidity }}%</li>
-            <li>Rainfall: {{ result.inputs.rainfall }}mm</li>
-            <li>Soil Type: {{ result.inputs.soil_type }}</li>
-            <li>Climate: {{ result.inputs.climate }}</li>
-        </ul>
-    </details>
-</div>
-{% endif %}
+
+        <script>
+            function updateFormTitle(){
+                var sel = document.getElementById('mode');
+                var title = document.querySelector('.form-title');
+                if(!sel || !title) return;
+                title.textContent = sel.value === 'diagnose' ? 'Plant Health Advisor' : 'Plant Recommendation';
+            }
+            document.addEventListener('DOMContentLoaded', updateFormTitle);
+        </script>
+    </section>
 
     </section>
 </div>
+</main>
 
 </body>
 </html>

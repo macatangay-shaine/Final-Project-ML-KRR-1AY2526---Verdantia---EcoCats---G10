@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Verdantia - Plant Recommendation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        // Essential JavaScript functions for interactivity
+        function toggleTooltip(id) {
+            const tooltip = document.getElementById(id);
+            if (!tooltip) return;
+            tooltip.style.display = tooltip.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function setDefault(field, value) {
+            const el = document.getElementsByName(field)[0];
+            if (el) el.value = value;
+        }
+
+        function setAllDefaults() {
+            setDefault('n', 50);
+            setDefault('p', 50);
+            setDefault('k', 50);
+            setDefault('ph', 6.5);
+            setDefault('temperature', 25);
+            setDefault('humidity', 70);
+            setDefault('rainfall', 150);
+        }
+
+        function updateSoilImage() {
+            const soilTypeEl = document.getElementById('soil_type');
+            const soilPreview = document.getElementById('soil-preview');
+            if (!soilTypeEl || !soilPreview) return;
+            const soilType = soilTypeEl.value;
+            const soilImages = {
+                'Clay': 'https://images.unsplash.com/photo-1628600185380-58f5b1e663ae?w=300&h=200&fit=crop',
+                'Loam': 'https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?w=300&h=200&fit=crop',
+                'Sandy': 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=300&h=200&fit=crop'
+            };
+            const src = soilImages[soilType];
+            if (src) {
+                soilPreview.src = src;
+                soilPreview.style.display = 'block';
+            } else {
+                soilPreview.style.display = 'none';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateSoilImage();
+        });
+    </script>
+</head>
+<body class="show-navbar">
+
+{% include "partials/navbar.html" %}
+
+<main class="page-content">
+    <div class="app">
+        <section class="screen form-screen">
+        <div class="unified-form-card">
+            <div class="form-header">
+                <a class="back-btn" href="{{ url_for('mode_select') }}">‹</a>
+                <div class="form-title">Plant Recommendation</div>
+                <div class="form-actions">
+                    <a class="icon-btn" href="{{ url_for('landing') }}" title="Home">🏠</a>
+                </div>
+            </div>
+            <div class="form-results-grid">
+            <div class="form-panel">
+                <form method="POST" action="{{ url_for('recommend') }}">
+                    <input type="hidden" name="profile_username" value="{{ session.get('profile_username','') }}" />
+                    <input type="hidden" name="profile_avatar" value="{{ session.get('profile_avatar','') }}" />
+                    <h3>Environmental Conditions</h3>
+                    <div class="input-group">
+                        <label>Nitrogen (N) 
+                            <button type="button" class="info-btn" onclick="toggleTooltip('tooltip-n')">
+                                ℹ️
+                            </button>
+                        </label>
+                        <div id="tooltip-n" class="tooltip">
+                            <strong>Nitrogen:</strong> Essential for leaf growth and chlorophyll. Range: 0-140.<br>
+                            <strong>💰 Free:</strong> Look for yellowing leaves (low N) or excessive green growth (high N).<br>
+                            <button type="button" class="default-btn" onclick="setDefault('n', 50)">Use Typical (50)</button>
+                        </div>
+                        <input type="number" step="any" name="n" required placeholder="e.g., 90">
+                    </div>
+                    <div class="input-group">
+                        <label>Phosphorus (P) 
+                            <button type="button" class="info-btn" onclick="toggleTooltip('tooltip-p')">
+                                ℹ️
+                            </button>
+                        </label>
+                        <div id="tooltip-p" class="tooltip">
+                            <strong>Phosphorus:</strong> Important for root development and flowering. Range: 5-145.<br>
+                            <strong>💰 Free:</strong> Purple stems/leaves indicate deficiency.<br>
+                            <button type="button" class="default-btn" onclick="setDefault('p', 50)">Use Typical (50)</button>
+                        </div>
+                        <input type="number" step="any" name="p" required placeholder="e.g., 42">
+                    </div>
+                    <div class="input-group">
+                        <label>Potassium (K) 
+                            <button type="button" class="info-btn" onclick="toggleTooltip('tooltip-k')">
+                                ℹ️
+                            </button>
+                        </label>
+                        <div id="tooltip-k" class="tooltip">
+                            <strong>Potassium:</strong> Strengthens plants and improves disease resistance. Range: 5-205.<br>
+                            <strong>💰 Free:</strong> Brown leaf edges indicate deficiency.<br>
+                            <button type="button" class="default-btn" onclick="setDefault('k', 50)">Use Typical (50)</button>
+                        </div>
+                        <input type="number" step="any" name="k" required placeholder="e.g., 43">
+                    </div>
+                    <div class="input-group">
+                        <label>pH Level 
+                            <button type="button" class="info-btn" onclick="toggleTooltip('tooltip-ph')">
+                                ℹ️
+                            </button>
+                        </label>
+                        <div id="tooltip-ph" class="tooltip">
+                            <strong>pH Level:</strong> Soil acidity/alkalinity affects nutrient availability. Range: 3.5-10.<br>
+                            <strong>💰 Free:</strong> Use pH strips from garden centers or online.<br>
+                            • Most plants: 6.0-7.0<br>
+                            • Acid-loving (blueberries): 4.5-5.5<br>
+                            <button type="button" class="default-btn" onclick="setDefault('ph', 6.5)">Use Neutral (6.5)</button>
+                        </div>
+                        <input type="number" step="any" name="ph" required placeholder="e.g., 6.5" min="0" max="14">
+                    </div>
+                    <div class="input-group">
+                        <label>Temperature (°C) 
+                            <button type="button" class="info-btn" onclick="toggleTooltip('tooltip-temp')">
+                                ℹ️
+                            </button>
+                        </label>
+                        <div id="tooltip-temp" class="tooltip">
+                            <strong>Temperature:</strong> Average daily temperature in Celsius. Range: 8-45°C.<br>
+                            <strong>💰 Free:</strong> Check weather apps or use a thermometer.<br>
+                            <button type="button" class="default-btn" onclick="setDefault('temperature', 25)">Use Tropical (25°C)</button>
+                        </div>
+                        <input type="number" step="any" name="temperature" required placeholder="e.g., 25">
+                    </div>
+                    <div class="input-group">
+                        <label>Humidity (%) 
+                            <button type="button" class="info-btn" onclick="toggleTooltip('tooltip-humidity')">
+                                ℹ️
+                            </button>
+                        </label>
+                        <div id="tooltip-humidity" class="tooltip">
+                            <strong>Humidity:</strong> Percentage of moisture in the air. Range: 14-100%.<br>
+                            <strong>💰 Free:</strong> Check weather apps or websites.<br>
+                            • Coastal/rainy areas: 70-90%<br>
+                            • Dry areas: 30-50%<br>
+                            <button type="button" class="default-btn" onclick="setDefault('humidity', 70)">Use Typical (70%)</button>
+                        </div>
+                        <input type="number" step="any" name="humidity" required placeholder="e.g., 80" min="0" max="100">
+                    </div>
+                    <div class="input-group">
+                        <label>Rainfall (mm) 
+                            <button type="button" class="info-btn" onclick="toggleTooltip('tooltip-rainfall')">
+                                ℹ️
+                            </button>
+                        </label>
+                        <div id="tooltip-rainfall" class="tooltip">
+                            <strong>Rainfall:</strong> Average monthly rainfall in millimeters.<br>
+                            <strong>💰 Free:</strong> Google "average rainfall [your city]" or check weather websites.<br>
+                            • Heavy rain: 200+ mm/month<br>
+                            • Moderate: 100-200 mm/month<br>
+                            • Light: 50-100 mm/month<br>
+                            <button type="button" class="default-btn" onclick="setDefault('rainfall', 150)">Use Moderate (150mm)</button>
+                        </div>
+                        <input type="number" step="any" name="rainfall" required placeholder="e.g., 200">
+                    </div>
+                    <div class="input-group">
+                        <label>Soil Type 
+                            <button type="button" class="info-btn" onclick="toggleTooltip('tooltip-soil')">
+                                ℹ️
+                            </button>
+                        </label>
+                        <div id="tooltip-soil" class="tooltip">
+                            <strong>Soil Types:</strong><br>
+                            • <strong>Clay:</strong> Heavy, sticky when wet, holds water well<br>
+                            • <strong>Loam:</strong> Balanced mix, ideal for most plants<br>
+                            • <strong>Sandy:</strong> Light, drains quickly, feels gritty
+                        </div>
+                        <select name="soil_type" id="soil_type" onchange="updateSoilImage()">
+                            <option value="Clay">Clay (Heavy, water-retaining)</option>
+                            <option value="Loam">Loam (Balanced, ideal)</option>
+                            <option value="Sandy">Sandy (Light, fast-draining)</option>
+                        </select>
+                        <img id="soil-preview" class="soil-preview" alt="Soil preview">
+                    </div>
+                    <div class="input-group">
+                        <label>Climate Type 
+                            <button type="button" class="info-btn" onclick="toggleTooltip('tooltip-climate')">
+                                ℹ️
+                            </button>
+                        </label>
+                        <div id="tooltip-climate" class="tooltip">
+                            <strong>Climate Types:</strong><br>
+                            • <strong>Tropical Wet:</strong> High rainfall year-round<br>
+                            • <strong>Tropical Moist:</strong> Wet/dry seasons<br>
+                            • <strong>Tropical Dry:</strong> Long dry periods<br>
+                            • <strong>Urban Heat Zone:</strong> City areas with heat buildup
+                        </div>
+                        <select name="climate">
+                            <option value="Tropical Wet">Tropical Wet (Rainy year-round)</option>
+                            <option value="Tropical Moist">Tropical Moist (Seasonal rain)</option>
+                            <option value="Tropical Dry">Tropical Dry (Long dry spells)</option>
+                            <option value="Urban Heat Zone">Urban Heat Zone (City heat)</option>
+                        </select>
+                    </div>
+
+                    <div class="default-all-section">
+                        <p><strong>💡 Don't have testing equipment?</strong></p>
+                        <button type="button" class="default-all-btn" onclick="setAllDefaults()">📝 Fill with Typical Values</button>
+                        <p class="hint-text">Use typical values for tropical gardening, then adjust based on your observations</p>
+                    </div>
+
+                    <button type="submit" class="analyze-btn">Analyze</button>
+                </form>
+            </div>
+            <div class="results-panel">
+                {% if error %}
+                <div class="error">
+                    <h2>⚠️ Error</h2>
+                    <p>{{ error }}</p>
+                </div>
+                {% endif %}
+                {% if result %}
+                <div class="result card">
+                    <h2>📊 Results</h2>
+                    <div class="recommendation">
+                        <h3>🌾 Recommended Crop</h3>
+                        <div class="crop-display">
+                            <div class="crop-icon">
+                                {% if result.crop in ['rice','wheat','maize'] %}🌾{% elif result.crop in ['apple','banana','mango','orange','papaya','watermelon','grapes','pomegranate'] %}🍎{% elif result.crop in ['tomato','potato','carrot','lettuce','spinach'] %}🥬{% elif result.crop in ['coffee','cotton'] %}☕{% else %}🌱{% endif %}
+                            </div>
+                            <p class="crop-name">{{ result.crop }}</p>
+                        </div>
+                        <div class="message-section">
+                            <h4>📝 Analysis</h4>
+                            <p><strong>Message:</strong> {{ result.message }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="explanation-section">
+                        <h4>🔬 Why {{ result.crop }}?</h4>
+                        <ul class="recommendation-reasons">
+                            <li><strong>Soil Compatibility:</strong> {{ result.crop }} thrives in {{ result.inputs.soil_type|lower }} soil conditions</li>
+                            <li><strong>Climate Match:</strong> Optimal for {{ result.inputs.climate|lower }} environments</li>
+                            <li><strong>Temperature Range:</strong> Suitable for {{ result.inputs.temperature }}°C growing conditions</li>
+                            <li><strong>Moisture Levels:</strong> Compatible with {{ result.inputs.humidity }}% humidity and {{ result.inputs.rainfall }}mm rainfall</li>
+                        </ul>
+                    </div>
+                    
+                    <details class="details" open>
+                        <summary>📊 Complete Environmental Analysis</summary>
+                        <div class="environmental-grid">
+                            <div class="env-section">
+                                <h4>🧪 Soil Nutrients</h4>
+                                <ul>
+                                    <li>Nitrogen (N): {{ result.inputs.n }} <span class="{% if result.inputs.n|float >= 40 and result.inputs.n|float <= 60 %}status-good{% elif result.inputs.n|float < 40 %}status-low{% else %}status-high{% endif %}">{% if result.inputs.n|float >= 40 and result.inputs.n|float <= 60 %}OPTIMAL{% elif result.inputs.n|float < 40 %}LOW{% else %}HIGH{% endif %}</span></li>
+                                    <li>Phosphorus (P): {{ result.inputs.p }} <span class="{% if result.inputs.p|float >= 25 and result.inputs.p|float <= 75 %}status-good{% elif result.inputs.p|float < 25 %}status-low{% else %}status-high{% endif %}">{% if result.inputs.p|float >= 25 and result.inputs.p|float <= 75 %}OPTIMAL{% elif result.inputs.p|float < 25 %}LOW{% else %}HIGH{% endif %}</span></li>
+                                    <li>Potassium (K): {{ result.inputs.k }} <span class="{% if result.inputs.k|float >= 30 and result.inputs.k|float <= 70 %}status-good{% elif result.inputs.k|float < 30 %}status-low{% else %}status-high{% endif %}">{% if result.inputs.k|float >= 30 and result.inputs.k|float <= 70 %}OPTIMAL{% elif result.inputs.k|float < 30 %}LOW{% else %}HIGH{% endif %}</span></li>
+                                    <li>pH Level: {{ result.inputs.ph }} <span class="{% if result.inputs.ph|float >= 6.0 and result.inputs.ph|float <= 7.5 %}status-good{% elif result.inputs.ph|float < 6.0 %}status-low{% else %}status-high{% endif %}">{% if result.inputs.ph|float >= 6.0 and result.inputs.ph|float <= 7.5 %}OPTIMAL{% elif result.inputs.ph|float < 6.0 %}ACIDIC{% else %}ALKALINE{% endif %}</span></li>
+                                </ul>
+                            </div>
+                            <div class="env-section">
+                                <h4>🌡️ Climate Conditions</h4>
+                                <ul>
+                                    <li>Temperature: {{ result.inputs.temperature }}°C <span class="{% if result.inputs.temperature|float >= 20 and result.inputs.temperature|float <= 30 %}status-good{% elif result.inputs.temperature|float < 20 %}status-low{% else %}status-high{% endif %}">{% if result.inputs.temperature|float >= 20 and result.inputs.temperature|float <= 30 %}OPTIMAL{% elif result.inputs.temperature|float < 20 %}COOL{% else %}HOT{% endif %}</span></li>
+                                    <li>Humidity: {{ result.inputs.humidity }}% <span class="{% if result.inputs.humidity|float >= 50 and result.inputs.humidity|float <= 80 %}status-good{% elif result.inputs.humidity|float < 50 %}status-low{% else %}status-high{% endif %}">{% if result.inputs.humidity|float >= 50 and result.inputs.humidity|float <= 80 %}OPTIMAL{% elif result.inputs.humidity|float < 50 %}DRY{% else %}HUMID{% endif %}</span></li>
+                                    <li>Rainfall: {{ result.inputs.rainfall }}mm <span class="{% if result.inputs.rainfall|float >= 100 and result.inputs.rainfall|float <= 200 %}status-good{% elif result.inputs.rainfall|float < 100 %}status-low{% else %}status-high{% endif %}">{% if result.inputs.rainfall|float >= 100 and result.inputs.rainfall|float <= 200 %}OPTIMAL{% elif result.inputs.rainfall|float < 100 %}LOW{% else %}HIGH{% endif %}</span></li>
+                                    <li>Climate: {{ result.inputs.climate }} <span class="status-good">MATCHED</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </details>
+                    
+                    <div class="care-tips">
+                        <h4>🌱 Growing Tips for {{ result.crop }}</h4>
+                        <p>Based on your environmental conditions, here are some specific care recommendations:</p>
+                        <ul class="recommendation-reasons">
+                            {% if result.inputs.ph|float < 6.0 %}
+                            <li>🌿 Your soil is acidic (pH {{ result.inputs.ph }}). Consider adding lime to raise pH for better nutrient uptake.</li>
+                            {% elif result.inputs.ph|float > 7.5 %}
+                            <li>🌿 Your soil is alkaline (pH {{ result.inputs.ph }}). Add organic compost or sulfur to lower pH if needed.</li>
+                            {% endif %}
+                            {% if result.inputs.humidity|float < 50 %}
+                            <li>💧 Low humidity ({{ result.inputs.humidity }}%). Consider mulching and regular watering to maintain soil moisture.</li>
+                            {% elif result.inputs.humidity|float > 80 %}
+                            <li>💧 High humidity ({{ result.inputs.humidity }}%). Ensure good air circulation to prevent fungal diseases.</li>
+                            {% endif %}
+                            {% if result.inputs.temperature|float > 30 %}
+                            <li>🌡️ High temperatures ({{ result.inputs.temperature }}°C). Provide shade during hottest parts of the day.</li>
+                            {% elif result.inputs.temperature|float < 20 %}
+                            <li>🌡️ Cool temperatures ({{ result.inputs.temperature }}°C). Consider season extension techniques or cold-hardy varieties.</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            </div>
+        </div>
+    </section>
+    </div>
+</main>
+
+</body>
+</html>

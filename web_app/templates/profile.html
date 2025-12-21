@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Verdantia - Profile Setup</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="show-navbar">
+
+{% include "partials/navbar.html" %}
+
+<main class="page-content">
+    <div class="app">
+    <section class="screen profile-setup">
+        <form class="profile-card" method="post" enctype="multipart/form-data" action="{{ url_for('profile') }}">
+            <div class="avatar-box">
+                {% if profile_avatar %}
+                    <img class="avatar-placeholder" style="border:none;" src="{{ url_for('static', filename='uploads/' + profile_avatar) }}" alt="avatar">
+                {% else %}
+                    <div class="avatar-placeholder">👤</div>
+                {% endif %}
+                <div class="avatar-input">
+                    <input type="file" name="avatar" accept="image/*">
+                </div>
+            </div>
+            <div class="profile-fields">
+                <div>
+                    <label for="username">Username:</label>
+                    <input id="username" name="username" type="text" placeholder="choose your garden name" value="{{ profile_username or '' }}">
+                </div>
+                <div>
+                    <label for="age">Age:</label>
+                    <input id="age" name="age" type="text" placeholder="how many season have you seen?" value="{{ profile_age or '' }}">
+                </div>
+                <div>
+                    <label for="favorite">Favorite Plant:</label>
+                    <input id="favorite" name="favorite" type="text" placeholder="what plant makes you smile?" value="{{ profile_favorite or '' }}">
+                </div>
+                <div>
+                    <label for="bio">Bio:</label>
+                    <textarea id="bio" name="bio" rows="3" placeholder="share your gardening quotes">{{ profile_bio or '' }}</textarea>
+                </div>
+                <div class="profile-actions">
+                    <button class="profile-proceed" type="submit">Proceed</button>
+                </div>
+            </div>
+        </form>
+    </section>
+    </div>
+</main>
+
+</body>
+</html>

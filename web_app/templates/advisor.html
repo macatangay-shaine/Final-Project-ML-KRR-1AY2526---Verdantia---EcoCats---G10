@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Verdantia - Plant Health Advisor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="show-navbar">
+
+{% include "partials/navbar.html" %}
+
+<main class="page-content">
+    <div class="app">
+        <section class="screen form-screen">
+        <div class="unified-form-card">
+            <div class="form-header">
+                <a class="back-btn" href="{{ url_for('mode_select') }}">‹</a>
+                <div class="form-title">Plant Health Advisor</div>
+                <div class="form-actions">
+                    <a class="icon-btn" href="{{ url_for('landing') }}" title="Home">🏠</a>
+                </div>
+            </div>
+            <div class="form-results-grid">
+            <div class="form-panel">
+                <form method="POST" action="{{ url_for('advisor') }}">
+                    <input type="hidden" name="profile_username" value="{{ session.get('profile_username','') }}" />
+                    <input type="hidden" name="profile_avatar" value="{{ session.get('profile_avatar','') }}" />
+                    <div class="input-group">
+                        <label>Current Plant (for diagnosis)</label>
+                        <input type="text" name="current_plant" placeholder="e.g., tomato, lettuce, rice">
+                    </div>
+                    <h3>Environmental Conditions</h3>
+                    <div class="input-group"><label>Nitrogen (N)</label><input type="number" step="any" name="n" required></div>
+                    <div class="input-group"><label>Phosphorus (P)</label><input type="number" step="any" name="p" required></div>
+                    <div class="input-group"><label>Potassium (K)</label><input type="number" step="any" name="k" required></div>
+                    <div class="input-group"><label>pH Level</label><input type="number" step="any" name="ph" required min="0" max="14"></div>
+                    <div class="input-group"><label>Temperature (°C)</label><input type="number" step="any" name="temperature" required></div>
+                    <div class="input-group"><label>Humidity (%)</label><input type="number" step="any" name="humidity" required min="0" max="100"></div>
+                    <div class="input-group"><label>Rainfall (mm)</label><input type="number" step="any" name="rainfall" required></div>
+                    <div class="input-group"><label>Soil Type</label>
+                        <select name="soil_type"><option>Clay</option><option>Loam</option><option>Sandy</option></select>
+                    </div>
+                    <div class="input-group"><label>Climate Type</label>
+                        <select name="climate"><option>Tropical Wet</option><option>Tropical Moist</option><option>Tropical Dry</option><option>Urban Heat Zone</option></select>
+                    </div>
+                    <button type="submit" class="analyze-btn">Analyze</button>
+                </form>
+            </div>
+            <div class="results-panel">
+                {% if error %}
+                <div class="error"><h2>⚠️ Error</h2><p>{{ error }}</p></div>
+                {% endif %}
+                {% if result %}
+                <div class="result card">
+                    <h2>📊 Results</h2>
+                    <div class="diagnosis">
+                        <h3>🔍 Plant Health Diagnosis: {{ result.plant }}</h3>
+                        <div class="condition-badge condition-{{ result.condition.lower().replace(' ', '-') }}">
+                            {% if result.condition == 'Healthy' %}✅ {{ result.condition }}
+                            {% elif result.condition in ['Overwatered', 'Flood / Waterlogging Risk'] %}💧 {{ result.condition }}
+                            {% elif result.condition == 'Underwatered' %}🏜️ {{ result.condition }}
+                            {% elif result.condition == 'Pest Risk' %}🐛 {{ result.condition }}
+                            {% elif result.condition == 'Nutrient Deficiency' %}🌱 {{ result.condition }}
+                            {% else %}⚠️ {{ result.condition }}{% endif %}
+                        </div>
+                        <p><strong>Reason:</strong> {{ result.reason }}</p>
+                        <p><strong>💡 Advice:</strong> {{ result.advice }}</p>
+                    </div>
+                    <details class="details">
+                        <summary>View Environmental Conditions</summary>
+                        <ul>
+                            <li>Nitrogen: {{ result.inputs.n }}</li>
+                            <li>Phosphorus: {{ result.inputs.p }}</li>
+                            <li>Potassium: {{ result.inputs.k }}</li>
+                            <li>Temperature: {{ result.inputs.temperature }}°C</li>
+                            <li>Humidity: {{ result.inputs.humidity }}%</li>
+                            <li>Rainfall: {{ result.inputs.rainfall }}mm</li>
+                            <li>Soil Type: {{ result.inputs.soil_type }}</li>
+                            <li>Climate: {{ result.inputs.climate }}</li>
+                        </ul>
+                    </details>
+                </div>
+                {% endif %}
+            </div>
+            </div>
+        </div>
+    </section>
+    </div>
+</main>
+
+</body>
+</html>
