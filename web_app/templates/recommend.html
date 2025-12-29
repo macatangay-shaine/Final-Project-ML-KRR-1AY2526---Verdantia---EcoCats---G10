@@ -234,21 +234,9 @@
                     <div class="care-tips analysis-block">
                         <h4>Growing Tips for {{ result.crop }}</h4>
                         <ul class="recommendation-reasons">
-                            {% if result.inputs.ph|float < 6.0 %}
-                            <li>Your soil is acidic (pH {{ result.inputs.ph }}). Consider adding lime to raise pH for better nutrient uptake.</li>
-                            {% elif result.inputs.ph|float > 7.5 %}
-                            <li>Your soil is alkaline (pH {{ result.inputs.ph }}). Add organic compost or sulfur to lower pH if needed.</li>
-                            {% endif %}
-                            {% if result.inputs.humidity|float < 50 %}
-                            <li>Low humidity ({{ result.inputs.humidity }}%). Consider mulching and regular watering to maintain soil moisture.</li>
-                            {% elif result.inputs.humidity|float > 80 %}
-                            <li>High humidity ({{ result.inputs.humidity }}%). Ensure good air circulation to prevent fungal diseases.</li>
-                            {% endif %}
-                            {% if result.inputs.temperature|float > 30 %}
-                            <li>High temperatures ({{ result.inputs.temperature }}°C). Provide shade during hottest parts of the day.</li>
-                            {% elif result.inputs.temperature|float < 20 %}
-                            <li>Cool temperatures ({{ result.inputs.temperature }}°C). Consider season extension techniques or cold-hardy varieties.</li>
-                            {% endif %}
+                            {% for tip in result.tips %}
+                            <li>{{ tip }}</li>
+                            {% endfor %}
                         </ul>
                     </div>
                 </div>

@@ -8,7 +8,7 @@ import math
 import numpy as np
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from utils.rules import apply_rules
+from utils.rules import apply_rules, generate_growing_tips
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY", "dev-secret-key")
@@ -265,6 +265,15 @@ def recommend():
                     "inputs": inputs,
                     "alternatives": [s for s in suggestions if s.get("crop") != primary_crop]
                 }
+                # Always include growing tips so the UI isn't empty
+                try:
+                    result["tips"] = generate_growing_tips(inputs, primary_crop)
+                except Exception:
+                    result["tips"] = [
+                        "Maintain 2–3 cm mulch, water deeply, and monitor weekly.",
+                        "Use balanced, slow-release fertilizer and avoid overfeeding.",
+                        "Ensure good airflow; avoid overhead watering in humid periods."
+                    ]
         except Exception as e:
             error = f"Error processing request: {str(e)}"
 
