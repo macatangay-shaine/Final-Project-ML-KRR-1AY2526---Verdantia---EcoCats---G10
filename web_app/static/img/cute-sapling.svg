@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cute sapling">
+  <defs>
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="1" stdDeviation="0.6" flood-color="#1b5e20" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+  <!-- Face base -->
+  <circle cx="12" cy="14" r="6.5" fill="#A7E3B2" stroke="#2E7D32" stroke-width="1.5" filter="url(#shadow)"/>
+  <!-- Blush -->
+  <circle cx="9" cy="15.2" r="0.9" fill="#F8B4C0" opacity="0.8"/>
+  <circle cx="15" cy="15.2" r="0.9" fill="#F8B4C0" opacity="0.8"/>
+  <!-- Eyes -->
+  <circle cx="10.2" cy="13.2" r="0.8" fill="#1F2937"/>
+  <circle cx="13.8" cy="13.2" r="0.8" fill="#1F2937"/>
+  <!-- Smile -->
+  <path d="M9.8 16.2C10.5 17.1 11.2 17.5 12 17.5C12.8 17.5 13.5 17.1 14.2 16.2" stroke="#1F2937" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+  <!-- Stem -->
+  <path d="M12 11.2C12 9.6 12 8.6 12 8" stroke="#2E7D32" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Leaves -->
+  <path d="M12 8C12.9 8 14.3 7.8 15.3 7.2C16.4 6.5 17.1 5.5 17.2 4.4C16.1 4.4 14.8 4.8 13.8 5.5C12.7 6.2 12.2 7 12 8Z" fill="#7EC58D" stroke="#2E7D32" stroke-width="1.2"/>
+  <path d="M12 8C11.1 8 9.7 7.8 8.7 7.2C7.6 6.5 6.9 5.5 6.8 4.4C7.9 4.4 9.2 4.8 10.2 5.5C11.3 6.2 11.8 7 12 8Z" fill="#7EC58D" stroke="#2E7D32" stroke-width="1.2"/>
+</svg>

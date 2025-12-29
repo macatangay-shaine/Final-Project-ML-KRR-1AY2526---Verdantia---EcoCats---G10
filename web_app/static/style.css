@@ -702,16 +702,27 @@ body.show-navbar {
     text-transform: uppercase;
     letter-spacing: 0.06em;
 }
-.left-sidebar .sidebar-nav { display: flex; flex-direction: column; gap: 6px; }
+.left-sidebar .sidebar-nav { display: flex; flex-direction: column; gap: 10px; }
 .left-sidebar .sidebar-link {
-    display: block;
-    padding: 8px 10px;
-    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 10px;
     text-decoration: none;
     color: #1f2937;
-    background: transparent;
+    background: #ffffff;
+    border: 1px solid #e5e7eb; /* subtle divider-like border */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
 }
-.left-sidebar .sidebar-link:hover { background: #f3f4f6; }
+.left-sidebar .sidebar-link:hover { background: #f9fafb; border-color: #d1d5db; }
+.left-sidebar .sidebar-link .icon i {
+    width: 24px;
+    height: 24px;
+    stroke: #2e7d32;        /* professional green accent */
+    stroke-width: 2;
+}
+.left-sidebar .sidebar-link .label { font-weight: 600; }
 
 /* Add left padding to page content when sidebar is present */
 .page-content { padding-left: 260px; }
@@ -750,6 +761,20 @@ body.show-navbar {
     display: flex;
     align-items: center;
     position: relative;
+}
+
+.nav-greeting {
+    font-size: 14px;
+    color: #ffffff;
+    font-weight: 500;
+}
+
+.sapling-icon {
+    width: 22px;
+    height: 22px;
+    margin-left: 8px;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .user-section {

@@ -1,8 +1,17 @@
 <aside class="left-sidebar">
   <div class="sidebar-header">Verdantia</div>
   <nav class="sidebar-nav">
-    <a class="sidebar-link" href="{{ url_for('mode_select') }}">🏠 Home</a>
-    <a class="sidebar-link" href="{{ url_for('recommend') }}">🌿 Recommend Crops</a>
-    <a class="sidebar-link" href="{{ url_for('advisor') }}">🩺 Plant Advisor</a>
+    <a class="sidebar-link" href="{{ url_for('mode_select') }}">
+      <span class="icon"><i data-lucide="home"></i></span>
+      <span class="label">Home</span>
+    </a>
+    <a class="sidebar-link" href="{{ url_for('recommend') }}">
+      <span class="icon"><i data-lucide="sprout"></i></span>
+      <span class="label">Recommend Crops</span>
+    </a>
+    <a class="sidebar-link" href="{{ url_for('advisor') }}">
+      <span class="icon"><i data-lucide="stethoscope"></i></span>
+      <span class="label">Plant Advisor</span>
+    </a>
   </nav>
 </aside>
