@@ -11,6 +11,19 @@ __pycache__/
 *.so
 .Python
 
+# Jupyter
+.ipynb_checkpoints/
+notebook/.ipynb_checkpoints/
+
+# Environment files
+.env
+
+# App uploads (runtime-generated files)
+web_app/uploads/
+
+# Logs
+*.log
+
 # IDE
 .vscode/
 .idea/

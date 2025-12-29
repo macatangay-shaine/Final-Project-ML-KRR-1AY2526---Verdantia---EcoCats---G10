@@ -4,23 +4,40 @@
     <title>Verdantia - Smart Gardening Assistant</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script>
-        function startLandingSequence() {
+        document.addEventListener('DOMContentLoaded', () => {
             const slide1 = document.querySelector('.landing-slide-1');
             const slide2 = document.querySelector('.landing-slide-2');
-            if (slide1) { slide1.style.display = 'block'; slide1.classList.add('fade-in'); }
-            setTimeout(() => {
-                if (!slide1 || !slide2) return;
+            const fadeDuration = 480; // ms (matches CSS fade in/out)
+            if (slide1) {
+                slide1.style.display = 'block';
+                slide1.classList.add('fade-in');
+            }
+            let advanced = false;
+            function advance() {
+                if (!slide1 || !slide2 || advanced) return;
+                advanced = true;
+                // Fade out first slide
                 slide1.classList.remove('fade-in');
                 slide1.classList.add('fade-out');
                 setTimeout(() => {
                     slide1.style.display = 'none';
                     slide1.classList.remove('fade-out');
+                    // Fade in second slide
                     slide2.style.display = 'block';
                     slide2.classList.add('fade-in');
-                }, 550);
-            }, 3000);
-        }
-        document.addEventListener('DOMContentLoaded', startLandingSequence);
+                    setTimeout(() => {
+                        slide2.classList.remove('fade-in');
+                    }, fadeDuration);
+                }, fadeDuration);
+            }
+            document.addEventListener('click', advance);
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    advance();
+                }
+            });
+        });
     </script>
 </head>
 <body>

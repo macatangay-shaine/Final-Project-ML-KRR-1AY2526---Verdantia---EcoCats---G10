@@ -2,11 +2,12 @@
 <html>
 <head>
     <title>Verdantia - Plant Health Advisor</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css', v='20251222') }}">
 </head>
 <body class="show-navbar">
 
 {% include "partials/navbar.html" %}
+{% include "partials/sidebar.html" %}
 
 <main class="page-content">
     <div class="app">
@@ -16,7 +17,12 @@
                 <a class="back-btn" href="{{ url_for('mode_select') }}">‹</a>
                 <div class="form-title">Plant Health Advisor</div>
                 <div class="form-actions">
-                    <a class="icon-btn" href="{{ url_for('landing') }}" title="Home">🏠</a>
+                    <a class="icon-btn" href="{{ url_for('landing') }}" title="Home" aria-label="Home">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path d="M3 10.5L12 3l9 7.5" />
+                            <path d="M5 9v11h14V9" />
+                        </svg>
+                    </a>
                 </div>
             </div>
             <div class="form-results-grid">
@@ -25,48 +31,121 @@
                     <input type="hidden" name="profile_username" value="{{ session.get('profile_username','') }}" />
                     <input type="hidden" name="profile_avatar" value="{{ session.get('profile_avatar','') }}" />
                     <div class="input-group">
-                        <label>Current Plant (for diagnosis)</label>
-                        <input type="text" name="current_plant" placeholder="e.g., tomato, lettuce, rice">
+                        <div class="label-row">
+                            <label for="current_plant">Current Plant (for diagnosis)</label>
+                            <button type="button" class="info-toggle" aria-expanded="false" aria-controls="help-plant">▼</button>
+                        </div>
+                        <div id="help-plant" class="field-help">Optional. If provided, diagnosis is contextualized for this plant.</div>
+                        <input id="current_plant" type="text" name="current_plant" placeholder="e.g., tomato, lettuce, rice">
                     </div>
+
                     <h3>Environmental Conditions</h3>
-                    <div class="input-group"><label>Nitrogen (N)</label><input type="number" step="any" name="n" required></div>
-                    <div class="input-group"><label>Phosphorus (P)</label><input type="number" step="any" name="p" required></div>
-                    <div class="input-group"><label>Potassium (K)</label><input type="number" step="any" name="k" required></div>
-                    <div class="input-group"><label>pH Level</label><input type="number" step="any" name="ph" required min="0" max="14"></div>
-                    <div class="input-group"><label>Temperature (°C)</label><input type="number" step="any" name="temperature" required></div>
-                    <div class="input-group"><label>Humidity (%)</label><input type="number" step="any" name="humidity" required min="0" max="100"></div>
-                    <div class="input-group"><label>Rainfall (mm)</label><input type="number" step="any" name="rainfall" required></div>
-                    <div class="input-group"><label>Soil Type</label>
-                        <select name="soil_type"><option>Clay</option><option>Loam</option><option>Sandy</option></select>
+
+                    <div class="input-group">
+                        <div class="label-row">
+                            <label for="n">Nitrogen (N)</label>
+                            <button type="button" class="info-toggle" aria-expanded="false" aria-controls="help-n">▼</button>
+                        </div>
+                        <div id="help-n" class="field-help">Essential for vegetative growth and chlorophyll. Typical range: 0–140.</div>
+                        <input id="n" type="number" step="any" name="n" required>
                     </div>
-                    <div class="input-group"><label>Climate Type</label>
-                        <select name="climate"><option>Tropical Wet</option><option>Tropical Moist</option><option>Tropical Dry</option><option>Urban Heat Zone</option></select>
+
+                    <div class="input-group">
+                        <div class="label-row">
+                            <label for="p">Phosphorus (P)</label>
+                            <button type="button" class="info-toggle" aria-expanded="false" aria-controls="help-p">▼</button>
+                        </div>
+                        <div id="help-p" class="field-help">Supports root development and flowering. Typical range: 5–145.</div>
+                        <input id="p" type="number" step="any" name="p" required>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="label-row">
+                            <label for="k">Potassium (K)</label>
+                            <button type="button" class="info-toggle" aria-expanded="false" aria-controls="help-k">▼</button>
+                        </div>
+                        <div id="help-k" class="field-help">Improves vigor and disease resistance. Typical range: 5–205.</div>
+                        <input id="k" type="number" step="any" name="k" required>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="label-row">
+                            <label for="ph">pH Level</label>
+                            <button type="button" class="info-toggle" aria-expanded="false" aria-controls="help-ph">▼</button>
+                        </div>
+                        <div id="help-ph" class="field-help">Controls nutrient availability. Most plants: 6.0–7.0; acid-loving: 4.5–5.5.</div>
+                        <input id="ph" type="number" step="any" name="ph" required min="0" max="14">
+                    </div>
+
+                    <div class="input-group">
+                        <div class="label-row">
+                            <label for="temperature">Temperature (°C)</label>
+                            <button type="button" class="info-toggle" aria-expanded="false" aria-controls="help-temp">▼</button>
+                        </div>
+                        <div id="help-temp" class="field-help">Average daily temperature. Typical range: 8–45°C.</div>
+                        <input id="temperature" type="number" step="any" name="temperature" required>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="label-row">
+                            <label for="humidity">Humidity (%)</label>
+                            <button type="button" class="info-toggle" aria-expanded="false" aria-controls="help-humidity">▼</button>
+                        </div>
+                        <div id="help-humidity" class="field-help">Air moisture percentage. Coastal 70–90%, dry 30–50%.</div>
+                        <input id="humidity" type="number" step="any" name="humidity" required min="0" max="100">
+                    </div>
+
+                    <div class="input-group">
+                        <div class="label-row">
+                            <label for="rainfall">Rainfall (mm)</label>
+                            <button type="button" class="info-toggle" aria-expanded="false" aria-controls="help-rainfall">▼</button>
+                        </div>
+                        <div id="help-rainfall" class="field-help">Average monthly precipitation. Light: 50–100 mm; Moderate: 100–200 mm; Heavy: 200+ mm.</div>
+                        <input id="rainfall" type="number" step="any" name="rainfall" required>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="label-row">
+                            <label for="soil_type">Soil Type</label>
+                            <button type="button" class="info-toggle" aria-expanded="false" aria-controls="help-soil">▼</button>
+                        </div>
+                        <div id="help-soil" class="field-help">
+                            <strong>Clay:</strong> Heavy, sticky, water-retentive. <strong>Loam:</strong> Balanced, ideal. <strong>Sandy:</strong> Light, fast-draining.
+                        </div>
+                        <select id="soil_type" name="soil_type"><option>Clay</option><option>Loam</option><option>Sandy</option></select>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="label-row">
+                            <label for="climate">Climate Type</label>
+                            <button type="button" class="info-toggle" aria-expanded="false" aria-controls="help-climate">▼</button>
+                        </div>
+                        <div id="help-climate" class="field-help">Tropical Wet: rainy year-round. Tropical Moist: wet/dry seasons. Tropical Dry: long dry spells. Urban Heat Zone: warmer urban microclimate.</div>
+                        <select id="climate" name="climate"><option>Tropical Wet</option><option>Tropical Moist</option><option>Tropical Dry</option><option>Urban Heat Zone</option></select>
                     </div>
                     <button type="submit" class="analyze-btn">Analyze</button>
                 </form>
             </div>
             <div class="results-panel">
                 {% if error %}
-                <div class="error"><h2>⚠️ Error</h2><p>{{ error }}</p></div>
+                <div class="error"><h2>Error</h2><p>{{ error }}</p></div>
                 {% endif %}
                 {% if result %}
                 <div class="result card">
-                    <h2>📊 Results</h2>
-                    <div class="diagnosis">
-                        <h3>🔍 Plant Health Diagnosis: {{ result.plant }}</h3>
-                        <div class="condition-badge condition-{{ result.condition.lower().replace(' ', '-') }}">
-                            {% if result.condition == 'Healthy' %}✅ {{ result.condition }}
-                            {% elif result.condition in ['Overwatered', 'Flood / Waterlogging Risk'] %}💧 {{ result.condition }}
-                            {% elif result.condition == 'Underwatered' %}🏜️ {{ result.condition }}
-                            {% elif result.condition == 'Pest Risk' %}🐛 {{ result.condition }}
-                            {% elif result.condition == 'Nutrient Deficiency' %}🌱 {{ result.condition }}
-                            {% else %}⚠️ {{ result.condition }}{% endif %}
-                        </div>
-                        <p><strong>Reason:</strong> {{ result.reason }}</p>
-                        <p><strong>💡 Advice:</strong> {{ result.advice }}</p>
-                    </div>
+                    <h2>Results</h2>
+                    <section class="primary-result">
+                        <h3 class="section-title">Diagnosis</h3>
+                        <p class="primary-value">{{ result.condition }}</p>
+                        <p class="secondary-value">Plant: {{ result.plant }}</p>
+                    </section>
+                    <section class="analysis-block">
+                        <h4>Explanation</h4>
+                        <p>{{ result.reason }}</p>
+                        <h4 style="margin-top:12px;">Advice</h4>
+                        <p>{{ result.advice }}</p>
+                    </section>
                     <details class="details">
-                        <summary>View Environmental Conditions</summary>
+                        <summary>Environmental Inputs</summary>
                         <ul>
                             <li>Nitrogen: {{ result.inputs.n }}</li>
                             <li>Phosphorus: {{ result.inputs.p }}</li>
@@ -80,12 +159,19 @@
                     </details>
                 </div>
                 {% endif %}
+                {% if not result and not error %}
+                <div class="empty-state">
+                    <div class="empty-icon">🧪</div>
+                    <h2>Diagnosis Results</h2>
+                    <p>Fill the form and click <strong>Analyze</strong>. Your diagnosis and advice will appear here.</p>
+                </div>
+                {% endif %}
             </div>
             </div>
         </div>
     </section>
     </div>
 </main>
-
+<script src="{{ url_for('static', filename='js/ui.js') }}"></script>
 </body>
 </html>
