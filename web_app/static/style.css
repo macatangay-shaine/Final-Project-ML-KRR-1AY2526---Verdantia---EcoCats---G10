@@ -605,12 +605,12 @@ button:hover {
     width: auto;
     background: transparent;
     border: none;
-    color: #f8f8fa;
+    color: #374151; /* dark gray for visibility */
     font-size: 13px;
     cursor: pointer;
     padding: 2px 4px;
 }
-.info-toggle:hover { color: #374151; }
+.info-toggle:hover { color: #1f2937; }
 .field-help {
     display: none;
     background: #ffffff; /* align collapsible help with white background */

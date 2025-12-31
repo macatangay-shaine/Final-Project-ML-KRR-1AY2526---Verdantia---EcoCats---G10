@@ -3,6 +3,21 @@
 <head>
     <title>Verdantia - Plant Health Advisor</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css', v='20251222') }}">
+    <script>
+        function setDefault(field, value) {
+            const el = document.getElementsByName(field)[0];
+            if (el) el.value = value;
+        }
+        function setAllDefaults() {
+            setDefault('n', 50);
+            setDefault('p', 50);
+            setDefault('k', 50);
+            setDefault('ph', 6.5);
+            setDefault('temperature', 25);
+            setDefault('humidity', 70);
+            setDefault('rainfall', 150);
+        }
+    </script>
 </head>
 <body class="show-navbar">
 
@@ -39,8 +54,12 @@
                             <label for="n">Nitrogen (N)</label>
                             <button type="button" class="info-toggle" aria-expanded="false" aria-controls="help-n">▼</button>
                         </div>
-                        <div id="help-n" class="field-help">Essential for vegetative growth and chlorophyll. Typical range: 0–140.</div>
-                        <input id="n" type="number" step="any" name="n" required>
+                        <div id="help-n" class="field-help">
+                            <strong>Nitrogen:</strong> Essential for vegetative growth and chlorophyll. Typical range: 0–140.
+                            <div style="margin-top:8px;"><button type="button" class="default-btn" onclick="setDefault('n', 50)">Use Typical (50)</button>
+                            <div class="hint-text">No soil kit? Start with 50 and adjust based on leaf color and vigor.</div></div>
+                        </div>
+                        <input id="n" type="number" step="any" name="n" required placeholder="e.g., 50">
                     </div>
 
                     <div class="input-group">
@@ -48,8 +67,12 @@
                             <label for="p">Phosphorus (P)</label>
                             <button type="button" class="info-toggle" aria-expanded="false" aria-controls="help-p">▼</button>
                         </div>
-                        <div id="help-p" class="field-help">Supports root development and flowering. Typical range: 5–145.</div>
-                        <input id="p" type="number" step="any" name="p" required>
+                        <div id="help-p" class="field-help">
+                            <strong>Phosphorus:</strong> Supports root development and flowering. Typical range: 5–145.
+                            <div style="margin-top:8px;"><button type="button" class="default-btn" onclick="setDefault('p', 50)">Use Typical (50)</button>
+                            <div class="hint-text">Without testing, use 50; watch for poor rooting or delayed flowering.</div></div>
+                        </div>
+                        <input id="p" type="number" step="any" name="p" required placeholder="e.g., 50">
                     </div>
 
                     <div class="input-group">
@@ -57,8 +80,12 @@
                             <label for="k">Potassium (K)</label>
                             <button type="button" class="info-toggle" aria-expanded="false" aria-controls="help-k">▼</button>
                         </div>
-                        <div id="help-k" class="field-help">Improves vigor and disease resistance. Typical range: 5–205.</div>
-                        <input id="k" type="number" step="any" name="k" required>
+                        <div id="help-k" class="field-help">
+                            <strong>Potassium:</strong> Improves vigor and disease resistance. Typical range: 5–205.
+                            <div style="margin-top:8px;"><button type="button" class="default-btn" onclick="setDefault('k', 50)">Use Typical (50)</button>
+                            <div class="hint-text">If unsure, start at 50; adjust if plants look weak or disease-prone.</div></div>
+                        </div>
+                        <input id="k" type="number" step="any" name="k" required placeholder="e.g., 50">
                     </div>
 
                     <div class="input-group">
@@ -66,8 +93,12 @@
                             <label for="ph">pH Level</label>
                             <button type="button" class="info-toggle" aria-expanded="false" aria-controls="help-ph">▼</button>
                         </div>
-                        <div id="help-ph" class="field-help">Controls nutrient availability. Most plants: 6.0–7.0; acid-loving: 4.5–5.5.</div>
-                        <input id="ph" type="number" step="any" name="ph" required min="0" max="14">
+                        <div id="help-ph" class="field-help">
+                            <strong>Soil pH:</strong> Controls nutrient availability. Most plants: 6.0–7.0; acid-loving: 4.5–5.5.
+                            <div class="hint-text">No pH meter? Start with 6.5 (neutral) and adjust later.</div>
+                            <div style="margin-top:8px;"><button type="button" class="default-btn" onclick="setDefault('ph', 6.5)">Use Neutral (6.5)</button></div>
+                        </div>
+                        <input id="ph" type="number" step="any" name="ph" required min="0" max="14" placeholder="e.g., 6.5">
                     </div>
 
                     <div class="input-group">
@@ -75,8 +106,10 @@
                             <label for="temperature">Temperature (°C)</label>
                             <button type="button" class="info-toggle" aria-expanded="false" aria-controls="help-temp">▼</button>
                         </div>
-                        <div id="help-temp" class="field-help">Average daily temperature. Typical range: 8–45°C.</div>
-                        <input id="temperature" type="number" step="any" name="temperature" required>
+                        <div id="help-temp" class="field-help">Average daily temperature. Typical range: 8–45°C.
+                            <div style="margin-top:8px;"><button type="button" class="default-btn" onclick="setDefault('temperature', 25)">Use Typical (25°C)</button></div>
+                        </div>
+                        <input id="temperature" type="number" step="any" name="temperature" required placeholder="e.g., 25">
                     </div>
 
                     <div class="input-group">
@@ -84,8 +117,10 @@
                             <label for="humidity">Humidity (%)</label>
                             <button type="button" class="info-toggle" aria-expanded="false" aria-controls="help-humidity">▼</button>
                         </div>
-                        <div id="help-humidity" class="field-help">Air moisture percentage. Coastal 70–90%, dry 30–50%.</div>
-                        <input id="humidity" type="number" step="any" name="humidity" required min="0" max="100">
+                        <div id="help-humidity" class="field-help">Air moisture percentage. Coastal 70–90%, dry 30–50%.
+                            <div style="margin-top:8px;"><button type="button" class="default-btn" onclick="setDefault('humidity', 70)">Use Typical (70%)</button></div>
+                        </div>
+                        <input id="humidity" type="number" step="any" name="humidity" required min="0" max="100" placeholder="e.g., 70">
                     </div>
 
                     <div class="input-group">
@@ -93,8 +128,10 @@
                             <label for="rainfall">Rainfall (mm)</label>
                             <button type="button" class="info-toggle" aria-expanded="false" aria-controls="help-rainfall">▼</button>
                         </div>
-                        <div id="help-rainfall" class="field-help">Average monthly precipitation. Light: 50–100 mm; Moderate: 100–200 mm; Heavy: 200+ mm.</div>
-                        <input id="rainfall" type="number" step="any" name="rainfall" required>
+                        <div id="help-rainfall" class="field-help">Average monthly precipitation. Light: 50–100 mm; Moderate: 100–200 mm; Heavy: 200+ mm.
+                            <div style="margin-top:8px;"><button type="button" class="default-btn" onclick="setDefault('rainfall', 150)">Use Typical (150 mm)</button></div>
+                        </div>
+                        <input id="rainfall" type="number" step="any" name="rainfall" required placeholder="e.g., 150">
                     </div>
 
                     <div class="input-group">
@@ -115,6 +152,12 @@
                         </div>
                         <div id="help-climate" class="field-help">Tropical Wet: rainy year-round. Tropical Moist: wet/dry seasons. Tropical Dry: long dry spells. Urban Heat Zone: warmer urban microclimate.</div>
                         <select id="climate" name="climate"><option>Tropical Wet</option><option>Tropical Moist</option><option>Tropical Dry</option><option>Urban Heat Zone</option></select>
+                    </div>
+
+                    <div class="default-all-section">
+                        <p><strong>Don’t have testing equipment?</strong></p>
+                        <button type="button" class="default-all-btn" onclick="setAllDefaults()">Fill with Typical Values</button>
+                        <p class="hint-text">Start with typical tropical values, then adjust based on plant response.</p>
                     </div>
                     <button type="submit" class="analyze-btn">Analyze</button>
                 </form>

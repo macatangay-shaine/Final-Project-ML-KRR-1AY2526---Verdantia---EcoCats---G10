@@ -1,20 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  let openHelpId = null;
-
-  function closeOpen() {
-    if (!openHelpId) return;
-    const openPanel = document.getElementById(openHelpId);
-    if (openPanel) {
-      openPanel.classList.remove('open');
-      openPanel.style.display = 'none';
-    }
-    const prevBtn = document.querySelector(`[aria-controls="${openHelpId}"]`);
-    if (prevBtn) {
-      prevBtn.setAttribute('aria-expanded', 'false');
-      prevBtn.textContent = '▼';
-    }
-    openHelpId = null;
-  }
+  // Allow multiple help panels to be open at once (no accordion behavior)
 
   document.querySelectorAll('.info-toggle').forEach((btn) => {
     const targetId = btn.getAttribute('aria-controls');
@@ -31,16 +16,13 @@ document.addEventListener('DOMContentLoaded', () => {
         panel.style.display = 'none';
         btn.setAttribute('aria-expanded', 'false');
         btn.textContent = '▼';
-        openHelpId = null;
         return;
       }
-      // Accordion behavior: close any open panel first
-      closeOpen();
+      // Toggle current panel only (no closing others)
       panel.classList.add('open');
       panel.style.display = 'block';
       btn.setAttribute('aria-expanded', 'true');
       btn.textContent = '▲';
-      openHelpId = targetId;
     });
   });
 });

@@ -47,7 +47,8 @@
                         </div>
                         <div id="help-n" class="field-help">
                             <strong>Nitrogen:</strong> Essential for vegetative growth and chlorophyll. Typical range: 0–140.
-                            <div style="margin-top:8px;"><button type="button" class="default-btn" onclick="setDefault('n', 50)">Use Typical (50)</button></div>
+                            <div style="margin-top:8px;"><button type="button" class="default-btn" onclick="setDefault('n', 50)">Use Typical (50)</button>
+                            <div class="hint-text">No soil kit? Start with 50 and adjust based on leaf color and vigor.</div></div>
                         </div>
                         <input id="n" type="number" step="any" name="n" required placeholder="e.g., 90">
                     </div>
@@ -58,7 +59,8 @@
                         </div>
                         <div id="help-p" class="field-help">
                             <strong>Phosphorus:</strong> Supports root development and flowering. Typical range: 5–145.
-                            <div style="margin-top:8px;"><button type="button" class="default-btn" onclick="setDefault('p', 50)">Use Typical (50)</button></div>
+                            <div style="margin-top:8px;"><button type="button" class="default-btn" onclick="setDefault('p', 50)">Use Typical (50)</button>
+                            <div class="hint-text">Without testing, use 50; watch for poor rooting or delayed flowering.</div></div>
                         </div>
                         <input id="p" type="number" step="any" name="p" required placeholder="e.g., 42">
                     </div>
@@ -69,7 +71,8 @@
                         </div>
                         <div id="help-k" class="field-help">
                             <strong>Potassium:</strong> Improves vigor and disease resistance. Typical range: 5–205.
-                            <div style="margin-top:8px;"><button type="button" class="default-btn" onclick="setDefault('k', 50)">Use Typical (50)</button></div>
+                            <div style="margin-top:8px;"><button type="button" class="default-btn" onclick="setDefault('k', 50)">Use Typical (50)</button>
+                            <div class="hint-text">If unsure, start at 50; adjust if plants look weak or disease-prone.</div></div>
                         </div>
                         <input id="k" type="number" step="any" name="k" required placeholder="e.g., 43">
                     </div>
@@ -80,6 +83,7 @@
                         </div>
                         <div id="help-ph" class="field-help">
                             <strong>Soil pH:</strong> Controls nutrient availability. Typical ranges: most plants 6.0–7.0; acid-loving 4.5–5.5.
+                            <div class="hint-text">No pH meter? Start with 6.5 (neutral) and adjust later.</div>
                             <div style="margin-top:8px;"><button type="button" class="default-btn" onclick="setDefault('ph', 6.5)">Use Neutral (6.5)</button></div>
                         </div>
                         <input id="ph" type="number" step="any" name="ph" required placeholder="e.g., 6.5" min="0" max="14">
@@ -102,7 +106,8 @@
                         </div>
                         <div id="help-humidity" class="field-help">
                             Air moisture percentage. Typical: coastal 70–90%, dry 30–50%.
-                            <div style="margin-top:8px;"><button type="button" class="default-btn" onclick="setDefault('humidity', 70)">Use Typical (70%)</button></div>
+                            <div style="margin-top:8px;"><button type="button" class="default-btn" onclick="setDefault('humidity', 70)">Use Typical (70%)</button>
+                            <div class="hint-text">If you can’t measure, use 70% and adjust for your climate.</div></div>
                         </div>
                         <input id="humidity" type="number" step="any" name="humidity" required placeholder="e.g., 80" min="0" max="100">
                     </div>
@@ -113,7 +118,8 @@
                         </div>
                         <div id="help-rainfall" class="field-help">
                             Average monthly precipitation. Light: 50–100 mm; Moderate: 100–200 mm; Heavy: 200+ mm.
-                            <div style="margin-top:8px;"><button type="button" class="default-btn" onclick="setDefault('rainfall', 150)">Use Typical (150 mm)</button></div>
+                            <div style="margin-top:8px;"><button type="button" class="default-btn" onclick="setDefault('rainfall', 150)">Use Typical (150 mm)</button>
+                            <div class="hint-text">No rain gauge? Use 150 mm as a moderate baseline.</div></div>
                         </div>
                         <input id="rainfall" type="number" step="any" name="rainfall" required placeholder="e.g., 200">
                     </div>
